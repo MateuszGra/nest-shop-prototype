@@ -11,7 +11,7 @@ export class ProductsService {
                 price: "ASC",
             },
         });
-        if (items[0]) {
+        if (items.length > 0) {
             return {
                 isSuccess: true,
                 itemsCount: count,
@@ -20,7 +20,7 @@ export class ProductsService {
         } else {
             return {
                 isSuccess: false,
-                errors: ["empty"],
+                errors: ["Empty"],
             }
         }
     }
