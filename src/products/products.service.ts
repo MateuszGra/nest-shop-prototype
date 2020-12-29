@@ -24,4 +24,11 @@ export class ProductsService {
             }
         }
     }
+
+    async addOne(newProduct: ProductsEntity): Promise<RespStatus> {
+        await ProductsEntity.save(newProduct);
+        return {
+            isSuccess: true,
+        }
+    }
 }
