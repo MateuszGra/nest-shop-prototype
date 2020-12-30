@@ -13,6 +13,10 @@ export class ProductsEntity extends BaseEntity implements ProductsData {
         length: 10000,
     })
     description: string;
-    @Column()
+    @Column({
+        type: "float",
+        precision: 7,
+        scale: 2,
+    })
     price: number
 }
