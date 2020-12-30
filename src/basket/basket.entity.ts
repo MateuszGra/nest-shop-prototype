@@ -5,7 +5,7 @@ import { BasketData } from "../interfaces/basket";
 @Entity()
 export class BasketEntity extends BaseEntity implements BasketData {
     @PrimaryGeneratedColumn('uuid')
-    id: number;
+    id: string;
     @Column()
     count: number;
     @Column()
