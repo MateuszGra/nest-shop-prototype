@@ -1,7 +1,7 @@
-import {Body, Controller, Get, Inject, Post} from '@nestjs/common';
-import {RespStatus} from "../interfaces/resp-status";
-import {UserService} from "./user.service";
-import {UsersEntity} from "./users.entity";
+import { Body, Controller, Get, Inject, Post } from '@nestjs/common';
+import { RespStatus } from "../interfaces/resp-status";
+import { UserService } from "./user.service";
+import { UsersEntity } from "./users.entity";
 
 @Controller('users')
 export class Userscontroller {

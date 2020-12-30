@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import {RespStatus} from "../interfaces/resp-status";
-import {UserData} from "../interfaces/users";
-import {UsersEntity} from "./users.entity";
+import { RespStatus } from "../interfaces/resp-status";
+import { UserData } from "../interfaces/users";
+import { UsersEntity } from "./users.entity";
 
 @Injectable()
 export class UserService {
