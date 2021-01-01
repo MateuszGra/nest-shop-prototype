@@ -26,7 +26,7 @@ export class ProductsService {
     }
 
     async addOne(newProduct: ProductsEntity): Promise<RespStatus> {
-        const product = await ProductsEntity.save(newProduct);
+        const product: ProductsEntity = await ProductsEntity.save(newProduct);
         return {
             isSuccess: true,
             id: product.id,

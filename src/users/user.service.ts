@@ -23,7 +23,7 @@ export class UserService {
     }
 
     async addOne(newUser: UsersEntity): Promise<RespStatus> {
-        const user = await UsersEntity.save(newUser);
+        const user: UsersEntity = await UsersEntity.save(newUser);
         return {
             isSuccess: true,
             id: user.id,
