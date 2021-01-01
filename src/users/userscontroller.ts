@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Inject, Post } from '@nestjs/common';
+import { Body, Controller, Get, Inject, Param, Post } from '@nestjs/common';
 import { RespStatus } from "../interfaces/resp-status";
 import { UsersService } from "./users.service";
 import { UsersEntity } from "./users.entity";
@@ -15,6 +15,13 @@ export class Userscontroller {
 
     async showAll(): Promise<RespStatus> {
         return await this.usersService.getAll();
+    }
+
+    @Get('/:id')
+    async showOne(
+        @Param('id') id: string,
+    ): Promise<RespStatus> {
+        return await this.usersService.getOne(id);
     }
 
     @Post('/')

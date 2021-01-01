@@ -1,10 +1,9 @@
 import { ProductsEntity } from "../products/products.entity";
-import { UserData } from "./users";
-import { ProductsData } from "./products";
+import { UsersEntity } from "../users/users.entity";
 
 export interface BasketData {
     id: string,
-    user: UserData,
-    product: ProductsData,
+    user: UsersEntity,
+    product: ProductsEntity,
     count: number,
 }

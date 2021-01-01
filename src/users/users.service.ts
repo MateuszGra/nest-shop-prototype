@@ -1,13 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { RespStatus } from "../interfaces/resp-status";
-import { UserData } from "../interfaces/users";
 import { UsersEntity } from "./users.entity";
 
 @Injectable()
 export class UsersService {
 
     async getAll(): Promise<RespStatus> {
-        const [users, count]: [UserData[], number] = await UsersEntity.findAndCount();
+        const [users, count]: [UsersEntity[], number] = await UsersEntity.findAndCount();
         if (users.length > 0) {
             return {
                 isSuccess: true,
@@ -18,6 +17,21 @@ export class UsersService {
             return {
                 isSuccess: false,
                 errors: ["Empty"],
+            }
+        }
+    }
+
+    async getOne(id: string): Promise<RespStatus> {
+        const user: UsersEntity = await UsersEntity.findOne(id);
+        if (user) {
+            return {
+                isSuccess: true,
+                users: [user],
+            }
+        } else {
+            return {
+                isSuccess: false,
+                errors: [`User (${id}) not found`],
             }
         }
     }

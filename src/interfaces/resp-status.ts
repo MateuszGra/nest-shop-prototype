@@ -1,10 +1,10 @@
-import { ProductsData } from "./products";
-import { UserData } from "./users";
+import { ProductsEntity } from "../products/products.entity";
+import { UsersEntity } from "../users/users.entity";
 
 export type RespStatus = {
     isSuccess: true,
-    items?: ProductsData[],
-    users?: UserData[],
+    items?: ProductsEntity[],
+    users?: UsersEntity[],
     count?: number,
     pagesCount?: number,
     id?: string,
