@@ -1,5 +1,6 @@
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { BaseEntity, Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { ProductsData } from "../interfaces/products";
+import { BasketEntity } from "../basket/basket.entity";
 
 @Entity()
 export class ProductsEntity extends BaseEntity implements ProductsData {
@@ -19,4 +20,7 @@ export class ProductsEntity extends BaseEntity implements ProductsData {
         scale: 2,
     })
     price: number
+
+    @OneToMany(type => BasketEntity, entity => entity.product)
+    basket: BasketEntity;
 }

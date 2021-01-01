@@ -1,5 +1,5 @@
-import {ProductsData} from "./products";
-import {UserData} from "./users";
+import { ProductsData } from "./products";
+import { UserData } from "./users";
 
 export type RespStatus = {
     isSuccess: true,

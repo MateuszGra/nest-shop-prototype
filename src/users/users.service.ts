@@ -4,7 +4,7 @@ import { UserData } from "../interfaces/users";
 import { UsersEntity } from "./users.entity";
 
 @Injectable()
-export class UserService {
+export class UsersService {
 
     async getAll(): Promise<RespStatus> {
         const [users, count]: [UserData[], number] = await UsersEntity.findAndCount();
