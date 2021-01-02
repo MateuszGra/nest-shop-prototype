@@ -25,9 +25,7 @@ export class BasketService {
 
         const [basket, count]: [BasketEntity[], number] = await BasketEntity.findAndCount({
             relations: ['product'],
-            where: {
-                user: userId,
-            }
+            where: { user: userId }
         });
         const productsPrice = basket.map(item => item.product.price * item.count);
         const basketPrice = productsPrice.reduce((prev, curr) => prev + curr, 0);
@@ -38,6 +36,20 @@ export class BasketService {
             totalPrice: basketPrice,
             basket: basket,
         }
+    }
+
+    async clearUserBasket(userId: string): Promise<RespStatus> {
+        const user: RespStatus = await this.userService.getOne(userId);
+        if(!user.isSuccess){
+            return {
+                isSuccess: false,
+                errors: [`User (${userId}) not found`],
+            }
+        }
+        await BasketEntity.delete({
+            user: user.users[0],
+        });
+        return { isSuccess: true }
     }
 
     async addToBasket(newBasket: AddToBasketDTO): Promise<RespStatus> {
