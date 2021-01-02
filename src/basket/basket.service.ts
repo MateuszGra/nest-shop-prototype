@@ -14,11 +14,19 @@ export class BasketService {
     }
 
 
-    async getUserBasket(userID: string): Promise<RespStatus> {
+    async getUserBasket(userId: string): Promise<RespStatus> {
+        const user: RespStatus = await this.userService.getOne(userId);
+        if(!user.isSuccess){
+            return {
+                isSuccess: false,
+                errors: [`User (${userId}) not found`],
+            }
+        }
+
         const [basket, count]: [BasketEntity[], number] = await BasketEntity.findAndCount({
             relations: ['product'],
             where: {
-                user: userID,
+                user: userId,
             }
         });
         if (basket.length > 0) {
@@ -30,7 +38,7 @@ export class BasketService {
         } else {
             return {
                 isSuccess: false,
-                errors: [`User (${userID}) not found`],
+                errors: [`Basket empty`],
             }
         }
     }
@@ -38,7 +46,6 @@ export class BasketService {
     async addToBasket(newBasket: AddToBasketDTO): Promise<RespStatus> {
         const product: RespStatus = await this.productsService.getOne(newBasket.productId);
         if (!product.isSuccess) return product;
-        console.log(newBasket.count)
         if (newBasket.count > product.items[0].availability || newBasket.count < 1 ){
             return {
                 isSuccess: false,

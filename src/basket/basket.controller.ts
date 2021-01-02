@@ -12,11 +12,11 @@ export class BasketController {
     ) {
     }
 
-    @Get('/:id')
+    @Get('/:userId')
     async getBasket(
-        @Param('id') id: string,
+        @Param('userId') userId: string,
     ): Promise<RespStatus> {
-        return await this.basketService.getUserBasket(id);
+        return await this.basketService.getUserBasket(userId);
     }
 
     @Post('/')
