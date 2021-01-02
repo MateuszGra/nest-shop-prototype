@@ -13,6 +13,28 @@ export class BasketService {
     ) {
     }
 
+
+    async getUserBasket(userID: string): Promise<RespStatus> {
+        const [basket, count]: [BasketEntity[], number] = await BasketEntity.findAndCount({
+            relations: ['product'],
+            where: {
+                user: userID,
+            }
+        });
+        if (basket.length > 0) {
+            return {
+                isSuccess: true,
+                count: count,
+                basket: basket,
+            }
+        } else {
+            return {
+                isSuccess: false,
+                errors: [`User (${userID} not found)`],
+            }
+        }
+    }
+
     async addToBasket(newBasket: AddToBasketDTO): Promise<RespStatus> {
         const product: RespStatus = await this.productsService.getOne(newBasket.productId);
         if (!product.isSuccess) return product;

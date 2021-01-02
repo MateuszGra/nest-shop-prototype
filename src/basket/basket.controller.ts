@@ -1,4 +1,4 @@
-import { Body, Controller, Inject, Post } from '@nestjs/common';
+import {Body, Controller, Inject, Param, Post, Get} from '@nestjs/common';
 import { AddToBasketDTO } from "./dto/add-to-basket";
 import { RespStatus } from "../interfaces/resp-status";
 import { BasketService } from "./basket.service";
@@ -10,6 +10,13 @@ export class BasketController {
     constructor(
         @Inject(BasketService) private basketService: BasketService,
     ) {
+    }
+
+    @Get('/:id')
+    async getBasket(
+        @Param('id') id: string,
+    ): Promise<RespStatus> {
+        return await this.basketService.getUserBasket(id);
     }
 
     @Post('/')
