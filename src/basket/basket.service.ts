@@ -29,17 +29,10 @@ export class BasketService {
                 user: userId,
             }
         });
-        if (basket.length > 0) {
-            return {
-                isSuccess: true,
-                count: count,
-                basket: basket,
-            }
-        } else {
-            return {
-                isSuccess: false,
-                errors: [`Basket empty`],
-            }
+        return {
+            isSuccess: true,
+            count: count,
+            basket: basket,
         }
     }
 
