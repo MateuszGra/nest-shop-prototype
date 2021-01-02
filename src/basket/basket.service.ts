@@ -29,9 +29,13 @@ export class BasketService {
                 user: userId,
             }
         });
+        const productsPrice = basket.map(item => item.product.price * item.count);
+        const basketPrice = productsPrice.reduce((prev, curr) => prev + curr, 0);
+
         return {
             isSuccess: true,
             count: count,
+            totalPrice: basketPrice,
             basket: basket,
         }
     }

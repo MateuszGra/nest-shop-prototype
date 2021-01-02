@@ -7,6 +7,7 @@ export type RespStatus = {
     items?: ProductsEntity[],
     users?: UsersEntity[],
     basket?: BasketEntity[],
+    totalPrice?: number,
     count?: number,
     pagesCount?: number,
     id?: string,
