@@ -30,7 +30,7 @@ export class BasketService {
         } else {
             return {
                 isSuccess: false,
-                errors: [`User (${userID} not found)`],
+                errors: [`User (${userID}) not found`],
             }
         }
     }
