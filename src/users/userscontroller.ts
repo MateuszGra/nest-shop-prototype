@@ -25,9 +25,9 @@ export class Userscontroller {
     }
 
     @Post('/')
-    async addNew(
+    async register(
         @Body() newUser: UsersEntity,
     ): Promise<UserResp> {
-        return await this.usersService.addOne(newUser);
+        return await this.usersService.register(newUser);
     }
 }

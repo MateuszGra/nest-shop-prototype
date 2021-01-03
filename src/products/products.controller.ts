@@ -25,9 +25,9 @@ export class ProductsController {
     }
 
     @Post('/')
-    async register(
+    async addNew(
         @Body() newProduct: ProductsEntity,
     ): Promise<ProductsResp> {
-        return await this.productsService.register(newProduct);
+        return await this.productsService.addOne(newProduct);
     }
 }

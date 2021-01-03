@@ -36,7 +36,7 @@ export class UsersService {
         }
     }
 
-    async addOne(newUser: UsersEntity): Promise<UserResp> {
+    async register(newUser: UsersEntity): Promise<UserResp> {
         const user: UsersEntity = await UsersEntity.save(newUser);
         return {
             isSuccess: true,

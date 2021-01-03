@@ -39,7 +39,7 @@ export class ProductsService {
         }
     }
 
-    async register(newProduct: ProductsEntity): Promise<ProductsResp> {
+    async addOne(newProduct: ProductsEntity): Promise<ProductsResp> {
         const product: ProductsEntity = await ProductsEntity.save(newProduct);
         return {
             isSuccess: true,
