@@ -4,7 +4,7 @@ import { UsersEntity } from "./users.entity";
 import { UserResp } from "../interfaces/users";
 
 @Controller('users')
-export class Userscontroller {
+export class UsersController {
 
     constructor(
         @Inject(UsersService) private usersService: UsersService,
@@ -12,7 +12,6 @@ export class Userscontroller {
     }
 
     @Get('/')
-
     async showAll(): Promise<UserResp> {
         return await this.usersService.getAll();
     }
