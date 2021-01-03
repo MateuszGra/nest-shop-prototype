@@ -35,7 +35,7 @@ export class BasketService {
         return {
             isSuccess: true,
             count: count,
-            totalPrice: basketPrice,
+            totalPrice: Number(basketPrice.toFixed(2)),
             basket: basket,
         }
     }
