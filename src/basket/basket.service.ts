@@ -1,9 +1,11 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { BasketEntity } from "./basket.entity";
-import { RespStatus } from "../interfaces/resp-status";
 import { AddToBasketDTO } from "./dto/add-to-basket";
 import { ProductsService } from "../products/products.service";
 import { UsersService } from "../users/users.service";
+import { BasketResp } from "../interfaces/basket";
+import { ProductsResp } from "../interfaces/products";
+import { UserResp } from "../interfaces/users";
 
 @Injectable()
 export class BasketService {
@@ -14,8 +16,8 @@ export class BasketService {
     }
 
 
-    async getUserBasket(userId: string): Promise<RespStatus> {
-        const user: RespStatus = await this.userService.getOne(userId);
+    async getUserBasket(userId: string): Promise<BasketResp> {
+        const user: BasketResp = await this.userService.getOne(userId);
         if(!user.isSuccess){
             return {
                 isSuccess: false,
@@ -38,8 +40,8 @@ export class BasketService {
         }
     }
 
-    async clearUserBasket(userId: string): Promise<RespStatus> {
-        const user: RespStatus = await this.userService.getOne(userId);
+    async clearUserBasket(userId: string): Promise<BasketResp> {
+        const user: UserResp = await this.userService.getOne(userId);
         if(!user.isSuccess){
             return {
                 isSuccess: false,
@@ -52,8 +54,8 @@ export class BasketService {
         return { isSuccess: true }
     }
 
-    async addToBasket(newBasket: AddToBasketDTO): Promise<RespStatus> {
-        const product: RespStatus = await this.productsService.getOne(newBasket.productId);
+    async addToBasket(newBasket: AddToBasketDTO): Promise<BasketResp> {
+        const product: ProductsResp = await this.productsService.getOne(newBasket.productId);
         if (!product.isSuccess) return product;
         if (newBasket.count > product.items[0].availability || newBasket.count < 1 ){
             return {
@@ -66,7 +68,7 @@ export class BasketService {
             }
         }
 
-        const user: RespStatus = await this.userService.getOne(newBasket.userId);
+        const user: UserResp = await this.userService.getOne(newBasket.userId);
         if (!user.isSuccess) return user;
 
         if (user.isSuccess === true && product.isSuccess === true) {

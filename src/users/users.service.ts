@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
-import { RespStatus } from "../interfaces/resp-status";
 import { UsersEntity } from "./users.entity";
+import { UserResp } from "../interfaces/users";
 
 @Injectable()
 export class UsersService {
 
-    async getAll(): Promise<RespStatus> {
+    async getAll(): Promise<UserResp> {
         const [users, count]: [UsersEntity[], number] = await UsersEntity.findAndCount();
         if (users.length > 0) {
             return {
@@ -21,7 +21,7 @@ export class UsersService {
         }
     }
 
-    async getOne(id: string): Promise<RespStatus> {
+    async getOne(id: string): Promise<UserResp> {
         const user: UsersEntity = await UsersEntity.findOne(id);
         if (user) {
             return {
@@ -36,7 +36,7 @@ export class UsersService {
         }
     }
 
-    async addOne(newUser: UsersEntity): Promise<RespStatus> {
+    async addOne(newUser: UsersEntity): Promise<UserResp> {
         const user: UsersEntity = await UsersEntity.save(newUser);
         return {
             isSuccess: true,

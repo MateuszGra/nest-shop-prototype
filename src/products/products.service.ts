@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { RespStatus } from "../interfaces/resp-status";
 import { ProductsEntity } from "./products.entity";
+import {ProductsResp} from "../interfaces/products";
 
 @Injectable()
 export class ProductsService {
-    async getAll(): Promise<RespStatus> {
+    async getAll(): Promise<ProductsResp> {
         const [items, count]: [ProductsEntity[], number] = await ProductsEntity.findAndCount({
             order: {
                 price: "ASC",
@@ -24,7 +24,7 @@ export class ProductsService {
         }
     }
 
-    async getOne(id: string): Promise<RespStatus> {
+    async getOne(id: string): Promise<ProductsResp> {
         const product: ProductsEntity = await ProductsEntity.findOne(id);
         if (product) {
             return {
@@ -39,7 +39,7 @@ export class ProductsService {
         }
     }
 
-    async addOne(newProduct: ProductsEntity): Promise<RespStatus> {
+    async addOne(newProduct: ProductsEntity): Promise<ProductsResp> {
         const product: ProductsEntity = await ProductsEntity.save(newProduct);
         return {
             isSuccess: true,

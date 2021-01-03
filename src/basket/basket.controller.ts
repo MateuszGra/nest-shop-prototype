@@ -1,7 +1,7 @@
 import {Body, Controller, Inject, Param, Post, Get, Delete} from '@nestjs/common';
 import { AddToBasketDTO } from "./dto/add-to-basket";
-import { RespStatus } from "../interfaces/resp-status";
 import { BasketService } from "./basket.service";
+import { BasketResp } from "../interfaces/basket";
 
 
 @Controller('basket')
@@ -15,21 +15,21 @@ export class BasketController {
     @Get('/:userId')
     async getOne(
         @Param('userId') userId: string,
-    ): Promise<RespStatus> {
+    ): Promise<BasketResp> {
         return await this.basketService.getUserBasket(userId);
     }
 
     @Post('/')
     async addNew(
         @Body() newBasket: AddToBasketDTO,
-    ): Promise<RespStatus> {
+    ): Promise<BasketResp> {
         return await this.basketService.addToBasket(newBasket);
     }
 
     @Delete('/:userId')
     async clear(
         @Param('userId') userId: string,
-    ): Promise<RespStatus> {
+    ): Promise<BasketResp> {
         return await this.basketService.clearUserBasket(userId);
     }
 }
