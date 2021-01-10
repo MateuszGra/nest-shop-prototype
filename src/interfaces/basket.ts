@@ -11,11 +11,13 @@ export interface BasketData {
 
 export type BasketResp = {
     isSuccess: true,
+    status: number,
     basket?: BasketEntity[],
     count?: number,
     totalPrice?: number,
     id?: string,
 } | {
     isSuccess: false,
+    status: number,
     errors: string[],
 }

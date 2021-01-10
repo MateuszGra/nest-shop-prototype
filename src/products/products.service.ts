@@ -13,12 +13,14 @@ export class ProductsService {
         if (items.length > 0) {
             return {
                 isSuccess: true,
+                status: 200,
                 count: count,
                 items: items,
             }
         } else {
             return {
                 isSuccess: false,
+                status: 200,
                 errors: ["Empty"],
             }
         }
@@ -29,11 +31,13 @@ export class ProductsService {
         if (product) {
             return {
                 isSuccess: true,
+                status: 200,
                 items: [product],
             }
         } else {
             return {
                 isSuccess: false,
+                status: 404,
                 errors: [`Product (${id}) not found`],
             }
         }
@@ -43,6 +47,7 @@ export class ProductsService {
         const product: ProductsEntity = await ProductsEntity.save(newProduct);
         return {
             isSuccess: true,
+            status: 200,
             id: product.id,
         }
     }

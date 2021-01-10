@@ -21,6 +21,7 @@ export class BasketService {
         if(!user.isSuccess){
             return {
                 isSuccess: false,
+                status: 404,
                 errors: [`User (${userId}) not found`],
             }
         }
@@ -34,6 +35,7 @@ export class BasketService {
 
         return {
             isSuccess: true,
+            status: 200,
             count: count,
             totalPrice: Number(basketPrice.toFixed(2)),
             basket: basket,
@@ -45,13 +47,17 @@ export class BasketService {
         if(!user.isSuccess){
             return {
                 isSuccess: false,
+                status: 404,
                 errors: [`User (${userId}) not found`],
             }
         }
         await BasketEntity.delete({
             user: user.users[0],
         });
-        return { isSuccess: true }
+        return {
+            isSuccess: true,
+            status: 200,
+        }
     }
 
     async addToBasket(newBasket: AddToBasketDTO): Promise<BasketResp> {
@@ -60,6 +66,7 @@ export class BasketService {
         if (newBasket.count > product.items[0].availability || newBasket.count < 1 ){
             return {
                 isSuccess: false,
+                status: 406,
                 errors: [
                     "Count must be greater than zero and not greater than product availability",
                     `Count = ${newBasket.count}`,
@@ -81,6 +88,7 @@ export class BasketService {
             if (basket) {
                 return {
                     isSuccess: true,
+                    status: 200,
                     id: basket.id,
                 }
             }

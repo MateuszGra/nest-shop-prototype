@@ -10,12 +10,14 @@ export class UsersService {
         if (users.length > 0) {
             return {
                 isSuccess: true,
+                status: 200,
                 count: count,
                 users: users,
             }
         } else {
             return {
                 isSuccess: false,
+                status: 200,
                 errors: ["Empty"],
             }
         }
@@ -26,11 +28,13 @@ export class UsersService {
         if (user) {
             return {
                 isSuccess: true,
+                status: 200,
                 users: [user],
             }
         } else {
             return {
                 isSuccess: false,
+                status: 404,
                 errors: [`User (${id}) not found`],
             }
         }
@@ -40,6 +44,7 @@ export class UsersService {
         const user: UsersEntity = await UsersEntity.save(newUser);
         return {
             isSuccess: true,
+            status: 200,
             id: user.id,
         }
     }

@@ -9,10 +9,12 @@ export interface UserData {
 
 export type UserResp = {
     isSuccess: true,
+    status: number,
     users?: UsersEntity[],
     count?: number,
     id?: string,
 } | {
     isSuccess: false,
+    status: number,
     errors: string[],
 }

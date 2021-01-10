@@ -10,10 +10,12 @@ export interface ProductsData {
 
 export type ProductsResp = {
     isSuccess: true,
+    status: number,
     items?: ProductsEntity[],
     count?: number,
     id?: string,
 } | {
     isSuccess: false,
+    status: number,
     errors: string[],
 }
