@@ -1,4 +1,5 @@
 import { ProductsEntity } from "../products/products.entity";
+import { ResponseStatus } from "./response-status";
 
 export interface ProductsData {
     name: string,
@@ -10,12 +11,12 @@ export interface ProductsData {
 
 export type ProductsResp = {
     isSuccess: true,
-    status: number,
+    status: ResponseStatus,
     items?: ProductsEntity[],
     count?: number,
     id?: string,
 } | {
     isSuccess: false,
-    status: number,
+    status: ResponseStatus,
     errors: string[],
 }

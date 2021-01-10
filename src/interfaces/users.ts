@@ -1,4 +1,5 @@
-import {UsersEntity} from "../users/users.entity";
+import { UsersEntity } from "../users/users.entity";
+import { ResponseStatus } from "./response-status";
 
 export interface UserData {
     id: string,
@@ -9,12 +10,12 @@ export interface UserData {
 
 export type UserResp = {
     isSuccess: true,
-    status: number,
+    status: ResponseStatus,
     users?: UsersEntity[],
     count?: number,
     id?: string,
 } | {
     isSuccess: false,
-    status: number,
+    status: ResponseStatus,
     errors: string[],
 }

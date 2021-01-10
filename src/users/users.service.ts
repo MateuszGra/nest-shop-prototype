@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { UsersEntity } from "./users.entity";
 import { UserResp } from "../interfaces/users";
+import { ResponseStatus } from "../interfaces/response-status";
 
 @Injectable()
 export class UsersService {
@@ -10,14 +11,14 @@ export class UsersService {
         if (users.length > 0) {
             return {
                 isSuccess: true,
-                status: 200,
+                status: ResponseStatus.ok,
                 count: count,
                 users: users,
             }
         } else {
             return {
                 isSuccess: false,
-                status: 200,
+                status: ResponseStatus.ok,
                 errors: ["Empty"],
             }
         }
@@ -28,13 +29,13 @@ export class UsersService {
         if (user) {
             return {
                 isSuccess: true,
-                status: 200,
+                status: ResponseStatus.ok,
                 users: [user],
             }
         } else {
             return {
                 isSuccess: false,
-                status: 404,
+                status: ResponseStatus.notFound,
                 errors: [`User (${id}) not found`],
             }
         }
@@ -44,7 +45,7 @@ export class UsersService {
         const user: UsersEntity = await UsersEntity.save(newUser);
         return {
             isSuccess: true,
-            status: 200,
+            status: ResponseStatus.ok,
             id: user.id,
         }
     }

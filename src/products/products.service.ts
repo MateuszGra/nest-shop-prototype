@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { ProductsEntity } from "./products.entity";
-import {ProductsResp} from "../interfaces/products";
+import { ProductsResp } from "../interfaces/products";
+import { ResponseStatus } from "../interfaces/response-status";
 
 @Injectable()
 export class ProductsService {
@@ -13,14 +14,14 @@ export class ProductsService {
         if (items.length > 0) {
             return {
                 isSuccess: true,
-                status: 200,
+                status: ResponseStatus.ok,
                 count: count,
                 items: items,
             }
         } else {
             return {
                 isSuccess: false,
-                status: 200,
+                status: ResponseStatus.ok,
                 errors: ["Empty"],
             }
         }
@@ -31,13 +32,13 @@ export class ProductsService {
         if (product) {
             return {
                 isSuccess: true,
-                status: 200,
+                status: ResponseStatus.ok,
                 items: [product],
             }
         } else {
             return {
                 isSuccess: false,
-                status: 404,
+                status: ResponseStatus.notFound,
                 errors: [`Product (${id}) not found`],
             }
         }
@@ -47,7 +48,7 @@ export class ProductsService {
         const product: ProductsEntity = await ProductsEntity.save(newProduct);
         return {
             isSuccess: true,
-            status: 200,
+            status: ResponseStatus.ok,
             id: product.id,
         }
     }

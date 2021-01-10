@@ -1,4 +1,4 @@
-import { Injectable, Inject } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { BasketEntity } from "./basket.entity";
 import { AddToBasketDTO } from "./dto/add-to-basket";
 import { ProductsService } from "../products/products.service";
@@ -6,6 +6,7 @@ import { UsersService } from "../users/users.service";
 import { BasketResp } from "../interfaces/basket";
 import { ProductsResp } from "../interfaces/products";
 import { UserResp } from "../interfaces/users";
+import { ResponseStatus } from "../interfaces/response-status";
 
 @Injectable()
 export class BasketService {
@@ -21,7 +22,7 @@ export class BasketService {
         if(!user.isSuccess){
             return {
                 isSuccess: false,
-                status: 404,
+                status: ResponseStatus.notFound,
                 errors: [`User (${userId}) not found`],
             }
         }
@@ -35,7 +36,7 @@ export class BasketService {
 
         return {
             isSuccess: true,
-            status: 200,
+            status: ResponseStatus.ok,
             count: count,
             totalPrice: Number(basketPrice.toFixed(2)),
             basket: basket,
@@ -47,7 +48,7 @@ export class BasketService {
         if(!user.isSuccess){
             return {
                 isSuccess: false,
-                status: 404,
+                status: ResponseStatus.notFound,
                 errors: [`User (${userId}) not found`],
             }
         }
@@ -56,7 +57,7 @@ export class BasketService {
         });
         return {
             isSuccess: true,
-            status: 200,
+            status: ResponseStatus.ok,
         }
     }
 
@@ -66,7 +67,7 @@ export class BasketService {
         if (newBasket.count > product.items[0].availability || newBasket.count < 1 ){
             return {
                 isSuccess: false,
-                status: 406,
+                status: ResponseStatus.notAcceptable,
                 errors: [
                     "Count must be greater than zero and not greater than product availability",
                     `Count = ${newBasket.count}`,
@@ -88,7 +89,7 @@ export class BasketService {
             if (basket) {
                 return {
                     isSuccess: true,
-                    status: 200,
+                    status: ResponseStatus.ok,
                     id: basket.id,
                 }
             }

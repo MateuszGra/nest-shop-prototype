@@ -1,6 +1,7 @@
 import { ProductsEntity } from "../products/products.entity";
 import { UsersEntity } from "../users/users.entity";
 import { BasketEntity } from "../basket/basket.entity";
+import { ResponseStatus } from "./response-status";
 
 export interface BasketData {
     id: string,
@@ -11,13 +12,13 @@ export interface BasketData {
 
 export type BasketResp = {
     isSuccess: true,
-    status: number,
+    status: ResponseStatus,
     basket?: BasketEntity[],
     count?: number,
     totalPrice?: number,
     id?: string,
 } | {
     isSuccess: false,
-    status: number,
+    status: ResponseStatus,
     errors: string[],
 }
