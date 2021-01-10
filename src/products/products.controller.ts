@@ -1,4 +1,4 @@
-import { Get, Post, Inject, Body, Param } from '@nestjs/common';
+import {Get, Post, Inject, Body, Param, ParseUUIDPipe} from '@nestjs/common';
 import { Controller } from '@nestjs/common';
 import { ProductsService } from "./products.service";
 import { ProductsEntity } from "./products.entity";
@@ -19,7 +19,7 @@ export class ProductsController {
 
     @Get('/:id')
     async showOne(
-        @Param('id') id: string,
+        @Param('id', ParseUUIDPipe) id: string,
     ): Promise<ProductsResp> {
         return await this.productsService.getOne(id);
     }

@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Inject, Param, Post } from '@nestjs/common';
+import {Body, Controller, Get, Inject, Param, ParseUUIDPipe, Post} from '@nestjs/common';
 import { UsersService } from "./users.service";
 import { UsersEntity } from "./users.entity";
 import { UserResp } from "../interfaces/users";
@@ -18,7 +18,7 @@ export class UsersController {
 
     @Get('/:id')
     async showOne(
-        @Param('id') id: string,
+        @Param('id', ParseUUIDPipe) id: string,
     ): Promise<UserResp> {
         return await this.usersService.getOne(id);
     }
