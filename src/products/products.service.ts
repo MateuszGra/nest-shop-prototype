@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { ProductsEntity } from "./products.entity";
 import { ProductsResp } from "../interfaces/products";
 import { ResponseStatus } from "../interfaces/response-status";
+import { newProductDTO } from "./dto/new-product";
 
 @Injectable()
 export class ProductsService {
@@ -44,12 +45,17 @@ export class ProductsService {
         }
     }
 
-    async addOne(newProduct: ProductsEntity): Promise<ProductsResp> {
-        const product: ProductsEntity = await ProductsEntity.save(newProduct);
-        return {
-            isSuccess: true,
-            status: ResponseStatus.ok,
-            id: product.id,
+    async addOne(newProduct: newProductDTO): Promise<ProductsResp> {
+        const product = new ProductsEntity();
+        Object.assign(product, newProduct);
+        await product.save();
+
+        if(product) {
+            return {
+                isSuccess: true,
+                status: ResponseStatus.ok,
+                id: product.id,
+            }
         }
     }
 }

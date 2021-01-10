@@ -1,8 +1,8 @@
 import { Get, Post, Inject, Body, Param } from '@nestjs/common';
 import { Controller } from '@nestjs/common';
 import { ProductsService } from "./products.service";
-import { ProductsEntity } from "./products.entity";
 import { ProductsResp } from "../interfaces/products";
+import { newProductDTO } from "./dto/new-product";
 
 @Controller('products')
 export class ProductsController {
@@ -26,7 +26,7 @@ export class ProductsController {
 
     @Post('/')
     async addNew(
-        @Body() newProduct: ProductsEntity,
+        @Body() newProduct: newProductDTO,
     ): Promise<ProductsResp> {
         return await this.productsService.addOne(newProduct);
     }
