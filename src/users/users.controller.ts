@@ -1,7 +1,7 @@
-import {Body, Controller, Get, Inject, Param, ParseUUIDPipe, Post} from '@nestjs/common';
+import { Body, Controller, Get, Inject, Param, ParseUUIDPipe, Post } from '@nestjs/common';
 import { UsersService } from "./users.service";
 import { UserResp } from "../interfaces/users";
-import {registerUserDTO} from "./dto/register-user";
+import { registerUserDTO } from "./dto/register-user";
 
 @Controller('users')
 export class UsersController {

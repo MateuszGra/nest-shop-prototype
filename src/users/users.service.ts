@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { UsersEntity } from "./users.entity";
 import { UserResp } from "../interfaces/users";
 import { ResponseStatus } from "../interfaces/response-status";
-import {registerUserDTO} from "./dto/register-user";
+import { registerUserDTO } from "./dto/register-user";
 
 @Injectable()
 export class UsersService {
@@ -47,10 +47,12 @@ export class UsersService {
         Object.assign(user, newUser);
         await user.save();
 
-        return {
-            isSuccess: true,
-            status: ResponseStatus.ok,
-            id: user.id,
+        if(user) {
+            return {
+                isSuccess: true,
+                status: ResponseStatus.ok,
+                id: user.id,
+            }
         }
     }
 }
