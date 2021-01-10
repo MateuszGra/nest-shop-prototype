@@ -1,4 +1,4 @@
-import {IsInt, IsUUID, Max, Min} from "class-validator";
+import { IsInt, IsUUID } from "class-validator";
 
 export class AddToBasketDTO {
     @IsUUID()

@@ -1,7 +1,7 @@
 import {Body, Controller, Get, Inject, Param, ParseUUIDPipe, Post} from '@nestjs/common';
 import { UsersService } from "./users.service";
-import { UsersEntity } from "./users.entity";
 import { UserResp } from "../interfaces/users";
+import {registerUserDTO} from "./dto/register-user";
 
 @Controller('users')
 export class UsersController {
@@ -25,7 +25,7 @@ export class UsersController {
 
     @Post('/')
     async register(
-        @Body() newUser: UsersEntity,
+        @Body() newUser: registerUserDTO,
     ): Promise<UserResp> {
         return await this.usersService.register(newUser);
     }
