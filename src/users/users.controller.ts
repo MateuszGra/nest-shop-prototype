@@ -1,7 +1,9 @@
-import { Body, Controller, Get, Inject, Param, ParseUUIDPipe, Post } from '@nestjs/common';
+import {Body, Controller, Get, Inject, Param, ParseUUIDPipe, Post, UseInterceptors} from '@nestjs/common';
 import { UsersService } from "./users.service";
 import { UserResp } from "../interfaces/users";
 import { registerUserDTO } from "./dto/register-user";
+import {CacheInterceptor} from "../interceptors/cache.interceptor";
+import {CacheTime} from "../decorators/cache-time.decorator";
 
 @Controller('users')
 export class UsersController {
@@ -12,6 +14,8 @@ export class UsersController {
     }
 
     @Get('/')
+    @UseInterceptors(CacheInterceptor)
+    @CacheTime(10)
     async showAll(): Promise<UserResp> {
         return await this.usersService.getAll();
     }

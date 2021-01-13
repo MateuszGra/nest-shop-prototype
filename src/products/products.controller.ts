@@ -1,8 +1,10 @@
-import { Get, Post, Inject, Body, Param } from '@nestjs/common';
+import { Get, Post, Inject, Body, Param, UseInterceptors } from '@nestjs/common';
 import { Controller } from '@nestjs/common';
 import { ProductsService } from "./products.service";
 import { ProductsResp } from "../interfaces/products";
 import { newProductDTO } from "./dto/new-product";
+import { CacheInterceptor } from "../interceptors/cache.interceptor";
+import { CacheTime } from "../decorators/cache-time.decorator";
 
 @Controller('products')
 export class ProductsController {
@@ -13,6 +15,8 @@ export class ProductsController {
     }
 
     @Get('/')
+    @UseInterceptors(CacheInterceptor)
+    @CacheTime(10)
     async showAll(): Promise<ProductsResp> {
         return await this.productsService.getAll();
     }
