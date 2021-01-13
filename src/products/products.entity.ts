@@ -6,14 +6,18 @@ import { BasketEntity } from "../basket/basket.entity";
 export class ProductsEntity extends BaseEntity implements ProductsData {
     @PrimaryGeneratedColumn('uuid')
     id: string;
+
     @Column()
     name: string;
+
     @Column()
     availability: number;
+
     @Column({
         length: 10000,
     })
     description: string;
+
     @Column({
         type: "float",
         precision: 7,

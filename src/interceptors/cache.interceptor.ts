@@ -3,7 +3,6 @@ import { Reflector } from "@nestjs/core";
 import { Observable, of } from 'rxjs';
 import { tap } from "rxjs/operators";
 import { CacheEntity } from "../cache/cache.entity";
-import { PATH_METADATA } from '@nestjs/common/constants';
 
 @Injectable()
 export class CacheInterceptor implements NestInterceptor {

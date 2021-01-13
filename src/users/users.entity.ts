@@ -6,10 +6,13 @@ import { BasketEntity } from "../basket/basket.entity";
 export class UsersEntity extends BaseEntity implements UserData {
     @PrimaryGeneratedColumn('uuid')
     id: string;
+
     @Column()
     name: string;
+
     @Column()
     surname: string;
+
     @Column()
     email: string;
 

@@ -8,6 +8,7 @@ import { ProductsEntity } from "../products/products.entity";
 export class BasketEntity extends BaseEntity implements BasketData {
     @PrimaryGeneratedColumn('uuid')
     id: string;
+
     @Column()
     count: number;
 
