@@ -12,18 +12,6 @@ export class CacheEntity extends BaseEntity {
     parameters: string;
 
     @Column({
-        length: 100,
-    })
-    @Index()
-    controllerName: string;
-
-    @Column({
-        length: 100,
-    })
-    @Index()
-    actionName: string;
-
-    @Column({
         type: 'longtext',
     })
     dataJson: string;
