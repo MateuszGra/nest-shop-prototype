@@ -19,13 +19,13 @@ export class CacheInterceptor implements NestInterceptor {
         const cacheTimeInSec = this.reflector.get<number>('cacheTimeInSec', method);
         const controllerName = context.getClass().name;
         const actionName = method.name;
-        const url = context.getArgByIndex(0).url;
+        const parameters = context.getArgByIndex(0).url;
 
         const cachedData = await CacheEntity.findOne({
             where: {
                 controllerName,
                 actionName,
-                url,
+                parameters,
             },
         });
 
@@ -45,8 +45,8 @@ export class CacheInterceptor implements NestInterceptor {
                 const newCachedData = new CacheEntity();
                 newCachedData.controllerName = controllerName;
                 newCachedData.actionName = actionName;
-                newCachedData.url = url;
                 newCachedData.dataJson = JSON.stringify(data);
+                newCachedData.parameters = parameters;
                 await newCachedData.save();
             }),
         );

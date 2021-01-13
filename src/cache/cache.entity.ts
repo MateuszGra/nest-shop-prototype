@@ -19,7 +19,7 @@ export class CacheEntity extends BaseEntity {
 
     @Column()
     @Index()
-    url: string;
+    parameters: string
 
     @Column({
         type: 'longtext',
