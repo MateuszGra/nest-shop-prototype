@@ -6,6 +6,12 @@ export class CacheEntity extends BaseEntity {
     id: string;
 
     @Column({
+        length: 300,
+    })
+    @Index()
+    parameters: string;
+
+    @Column({
         length: 100,
     })
     @Index()
@@ -16,10 +22,6 @@ export class CacheEntity extends BaseEntity {
     })
     @Index()
     actionName: string;
-
-    @Column()
-    @Index()
-    parameters: string
 
     @Column({
         type: 'longtext',

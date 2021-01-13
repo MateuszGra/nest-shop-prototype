@@ -14,7 +14,7 @@ export class ProductsEntity extends BaseEntity implements ProductsData {
     availability: number;
 
     @Column({
-        length: 10000,
+        type: 'longtext',
     })
     description: string;
 
