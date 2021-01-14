@@ -77,6 +77,7 @@ export class OrdersService {
                 await order.save();
             }
         }
+        await this.basketService.clearUserBasket(userId);
 
         return {
             isSuccess: true,
