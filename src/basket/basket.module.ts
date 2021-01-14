@@ -11,5 +11,6 @@ import { UsersModule } from "../users/users.module";
   ],
   controllers: [BasketController],
   providers: [BasketService],
+  exports: [BasketService],
 })
 export class BasketModule {}

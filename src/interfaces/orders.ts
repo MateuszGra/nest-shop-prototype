@@ -18,7 +18,7 @@ export type OrderResp = {
     orderNumber?: string,
     count?: number,
     totalPrice?: number,
-    order: OrdersEntity[],
+    order?: OrdersEntity[],
 } | {
     isSuccess: false,
     status: ResponseStatus,

@@ -1,4 +1,4 @@
-import {Controller, Get, Inject, Param} from '@nestjs/common';
+import {Controller, Get, Inject, Param, ParseUUIDPipe, Post} from '@nestjs/common';
 import { OrdersService } from "./orders.service";
 import {OrderResp} from "../interfaces/orders";
 
@@ -16,5 +16,10 @@ export class OrdersController {
         return await this.ordersService.getOneByOrderNumber(orderNumber);
     }
 
-
+    @Post('/:userId')
+    async addNew(
+        @Param('userId', ParseUUIDPipe) userId: string
+    ): Promise<OrderResp> {
+        return await this.ordersService.addOne(userId);
+    }
 }
