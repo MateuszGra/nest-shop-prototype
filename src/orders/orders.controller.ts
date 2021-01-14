@@ -1,6 +1,6 @@
-import {Controller, Get, Inject, Param, ParseUUIDPipe, Post} from '@nestjs/common';
+import { Controller, Get, Inject, Param, ParseUUIDPipe, Post } from '@nestjs/common';
 import { OrdersService } from "./orders.service";
-import {OrderResp} from "../interfaces/orders";
+import { OrderResp } from "../interfaces/orders";
 
 @Controller('orders')
 export class OrdersController {
