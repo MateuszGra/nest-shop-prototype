@@ -6,6 +6,7 @@ import { TypeOrmModule } from "@nestjs/typeorm";
 import { BasketModule } from './basket/basket.module';
 import { UsersModule } from './users/users.module';
 import { CacheModule } from './cache/cache.module';
+import { OrdersModule } from './orders/orders.module';
 
 @Module({
   imports: [
@@ -13,7 +14,8 @@ import { CacheModule } from './cache/cache.module';
     ProductsModule,
     BasketModule,
     UsersModule,
-    CacheModule
+    CacheModule,
+    OrdersModule
   ],
   controllers: [AppController],
   providers: [AppService],
