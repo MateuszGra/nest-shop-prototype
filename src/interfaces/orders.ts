@@ -1,6 +1,7 @@
 import { UsersEntity } from "../users/users.entity";
-import {ProductsEntity} from "../products/products.entity";
-import {ResponseStatus} from "./response-status";
+import { ProductsEntity } from "../products/products.entity";
+import { ResponseStatus } from "./response-status";
+import { OrdersEntity } from "../orders/orders.entity";
 
 export interface OrdersData {
     id: string,
@@ -17,7 +18,7 @@ export type OrderResp = {
     orderNumber?: string,
     count?: number,
     totalPrice?: number,
-    order: any,
+    order: OrdersEntity[],
 } | {
     isSuccess: false,
     status: ResponseStatus,

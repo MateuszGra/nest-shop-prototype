@@ -1,6 +1,7 @@
 import { BaseEntity, Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { ProductsData } from "../interfaces/products";
 import { BasketEntity } from "../basket/basket.entity";
+import {OrdersEntity} from "../orders/orders.entity";
 
 @Entity()
 export class ProductsEntity extends BaseEntity implements ProductsData {
@@ -26,5 +27,8 @@ export class ProductsEntity extends BaseEntity implements ProductsData {
     price: number
 
     @OneToMany(type => BasketEntity, entity => entity.product)
-    basket: BasketEntity;
+    basket: BasketEntity[];
+
+    @OneToMany(type => OrdersEntity, entity => entity.product)
+    orders: OrdersEntity[];
 }
