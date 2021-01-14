@@ -8,6 +8,7 @@ import { ProductsService } from "../products/products.service";
 import { BasketService } from "../basket/basket.service";
 import { BasketResp } from "../interfaces/basket";
 import { ProductsResp } from "../interfaces/products";
+import { v4 as uuid } from 'uuid';
 
 @Injectable()
 export class OrdersService {
@@ -64,7 +65,7 @@ export class OrdersService {
         }
 
         const date = new Date();
-        const orderNumber = 'ABC123'
+        const orderNumber = uuid();
         for await (const basket of basketResp.basket) {
             const productResp: ProductsResp = await this.productsService.getOne(basket.product.id);
             if(productResp.isSuccess) {
