@@ -7,6 +7,8 @@ import { BasketResp } from "../interfaces/basket";
 import { ProductsResp } from "../interfaces/products";
 import { UserResp } from "../interfaces/users";
 import { ResponseStatus } from "../interfaces/response-status";
+import {UsersEntity} from "../users/users.entity";
+import {ProductsEntity} from "../products/products.entity";
 
 @Injectable()
 export class BasketsService {
@@ -87,24 +89,29 @@ export class BasketsService {
                 product: productResp.items[0],
             }
         })
-        if (basketExists) {
-            const basket = await BasketsEntity.update(basketExists.id, {
-                count: newBasket.count,
-                createdAt: new Date(),
-            })
-            if (basket) {
-                return {
-                    isSuccess: true,
-                    status: ResponseStatus.ok,
-                    id: basketExists.id
-                }
+        if (basketExists) return await this.updateBasket(newBasket, basketExists);
+        else return await this.createBasket(newBasket, userResp.users[0], productResp.items[0])
+    }
+
+    async updateBasket(newBasket: AddToBasketDTO, basketExists: BasketsEntity): Promise<BasketResp> {
+        const basket = await BasketsEntity.update(basketExists.id, {
+            count: newBasket.count,
+            createdAt: new Date(),
+        })
+        if (basket) {
+            return {
+                isSuccess: true,
+                status: ResponseStatus.ok,
+                id: basketExists.id
             }
         }
+    }
 
+    async createBasket(newBasket: AddToBasketDTO, user: UsersEntity, product: ProductsEntity): Promise<BasketResp> {
         const basket = new BasketsEntity();
         basket.count = newBasket.count;
-        basket.user = userResp.users[0];
-        basket.product = productResp.items[0];
+        basket.user = user;
+        basket.product = product;
         await basket.save();
 
         if (basket) {
