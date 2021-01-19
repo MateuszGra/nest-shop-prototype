@@ -12,6 +12,11 @@ export class BasketsEntity extends BaseEntity implements BasketData {
     @Column()
     count: number;
 
+    @Column({
+        default: () => 'CURRENT_TIMESTAMP',
+    })
+    createdAt: Date;
+
     @ManyToOne( type => ProductsEntity, entity => entity.basket )
     @JoinColumn()
     product: ProductsEntity;
