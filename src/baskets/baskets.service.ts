@@ -47,7 +47,7 @@ export class BasketsService {
 
     async clearUserBasket(userId: string): Promise<BasketResp> {
         const user: UserResp = await this.userService.getOne(userId);
-        if(!user.isSuccess){
+        if(!user.isSuccess) {
             return {
                 isSuccess: false,
                 status: ResponseStatus.notFound,
@@ -66,17 +66,6 @@ export class BasketsService {
     async addToBasket(newBasket: AddToBasketDTO): Promise<BasketResp> {
         const productResp: ProductsResp = await this.productsService.getOne(newBasket.productId);
         if (!productResp.isSuccess) return productResp;
-        if (newBasket.count > productResp.items[0].availability || newBasket.count < 1 ) {
-            return {
-                isSuccess: false,
-                status: ResponseStatus.notAcceptable,
-                errors: [
-                    "Count must be greater than zero and not greater than product availability",
-                    `Count = ${newBasket.count}`,
-                    `Availability = ${productResp.items[0].availability}`,
-                ],
-            }
-        }
 
         const userResp: UserResp = await this.userService.getOne(newBasket.userId);
         if (!userResp.isSuccess) return userResp;
@@ -94,6 +83,10 @@ export class BasketsService {
     }
 
     async updateBasket(newBasket: AddToBasketDTO, basketExists: BasketsEntity): Promise<BasketResp> {
+        if (newBasket.count === undefined) newBasket.count = basketExists.count + 1;
+        const availabilityResp = await this.availability(newBasket.count, basketExists.product);
+        if (!availabilityResp.isSuccess) return availabilityResp;
+
         const basket = await BasketsEntity.update(basketExists.id, {
             count: newBasket.count,
             createdAt: new Date(),
@@ -108,6 +101,10 @@ export class BasketsService {
     }
 
     async createBasket(newBasket: AddToBasketDTO, user: UsersEntity, product: ProductsEntity): Promise<BasketResp> {
+        if (newBasket.count === undefined) newBasket.count = 1;
+        const availabilityResp = await this.availability(newBasket.count, product);
+        if (!availabilityResp.isSuccess) return availabilityResp;
+
         const basket = new BasketsEntity();
         basket.count = newBasket.count;
         basket.user = user;
@@ -119,6 +116,20 @@ export class BasketsService {
                 isSuccess: true,
                 status: ResponseStatus.ok,
                 id: basket.id,
+            }
+        }
+    }
+
+    async availability(count: number, product: ProductsEntity): Promise<BasketResp> {
+        if (count > product.availability || count < 1 ) {
+            return {
+                isSuccess: false,
+                status: ResponseStatus.notAcceptable,
+                errors: [
+                    "Count must be greater than zero and not greater than product availability",
+                    `Count = ${count}`,
+                    `Availability = ${product.availability}`,
+                ],
             }
         }
     }
