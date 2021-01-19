@@ -1,14 +1,14 @@
 import {Body, Controller, Inject, Param, Post, Get, Delete, ParseUUIDPipe} from '@nestjs/common';
 import { AddToBasketDTO } from "./dto/add-to-basket";
-import { BasketService } from "./basket.service";
+import { BasketsService } from "./baskets.service";
 import { BasketResp } from "../interfaces/basket";
 
 
-@Controller('basket')
-export class BasketController {
+@Controller('baskets')
+export class BasketsController {
 
     constructor(
-        @Inject(BasketService) private basketService: BasketService,
+        @Inject(BasketsService) private basketService: BasketsService,
     ) {
     }
 

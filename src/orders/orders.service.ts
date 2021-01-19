@@ -5,7 +5,7 @@ import { OrdersEntity } from "./orders.entity";
 import { UserResp } from "../interfaces/users";
 import { UsersService } from "../users/users.service";
 import { ProductsService } from "../products/products.service";
-import { BasketService } from "../basket/basket.service";
+import { BasketsService } from "../baskets/baskets.service";
 import { BasketResp } from "../interfaces/basket";
 import { ProductsResp } from "../interfaces/products";
 import { v4 as uuid } from 'uuid';
@@ -15,7 +15,7 @@ export class OrdersService {
     constructor(
         @Inject(ProductsService) private productsService: ProductsService,
         @Inject(UsersService) private userService: UsersService,
-        @Inject(BasketService) private basketService: BasketService,
+        @Inject(BasketsService) private basketService: BasketsService,
     ) {
     }
 

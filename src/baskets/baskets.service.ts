@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { BasketEntity } from "./basket.entity";
+import { BasketsEntity } from "./baskets.entity";
 import { AddToBasketDTO } from "./dto/add-to-basket";
 import { ProductsService } from "../products/products.service";
 import { UsersService } from "../users/users.service";
@@ -9,7 +9,7 @@ import { UserResp } from "../interfaces/users";
 import { ResponseStatus } from "../interfaces/response-status";
 
 @Injectable()
-export class BasketService {
+export class BasketsService {
     constructor(
         @Inject(ProductsService) private productsService: ProductsService,
         @Inject(UsersService) private userService: UsersService,
@@ -27,7 +27,7 @@ export class BasketService {
             }
         }
 
-        const [basket, count]: [BasketEntity[], number] = await BasketEntity.findAndCount({
+        const [basket, count]: [BasketsEntity[], number] = await BasketsEntity.findAndCount({
             relations: ['product'],
             where: { user: userId }
         });
@@ -52,7 +52,7 @@ export class BasketService {
                 errors: [`User (${userId}) not found`],
             }
         }
-        await BasketEntity.delete({
+        await BasketsEntity.delete({
             user: user.users[0],
         });
         return {
@@ -80,7 +80,7 @@ export class BasketService {
         if (!user.isSuccess) return user;
 
         if (user.isSuccess === true && product.isSuccess === true) {
-            const basket = new BasketEntity();
+            const basket = new BasketsEntity();
             basket.count = newBasket.count;
             basket.user = user.users[0];
             basket.product = product.items[0];

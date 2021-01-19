@@ -3,13 +3,13 @@ import { OrdersController } from './orders.controller';
 import { OrdersService } from './orders.service';
 import { UsersModule } from "../users/users.module";
 import { ProductsModule } from "../products/products.module";
-import { BasketModule } from "../basket/basket.module";
+import { BasketsModule } from "../baskets/baskets.module";
 
 @Module({
   imports: [
     forwardRef(() => UsersModule),
     forwardRef(() => ProductsModule),
-    forwardRef(() => BasketModule),
+    forwardRef(() => BasketsModule),
   ],
   controllers: [OrdersController],
   providers: [OrdersService]
