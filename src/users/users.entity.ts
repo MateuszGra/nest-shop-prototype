@@ -1,7 +1,7 @@
 import { BaseEntity, Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { UserData } from "../interfaces/users";
 import { BasketsEntity } from "../baskets/baskets.entity";
-import {OrdersEntity} from "../orders/orders.entity";
+import { OrdersEntity } from "../orders/orders.entity";
 
 @Entity()
 export class UsersEntity extends BaseEntity implements UserData {

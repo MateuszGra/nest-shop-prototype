@@ -62,36 +62,56 @@ export class BasketsService {
     }
 
     async addToBasket(newBasket: AddToBasketDTO): Promise<BasketResp> {
-        const product: ProductsResp = await this.productsService.getOne(newBasket.productId);
-        if (!product.isSuccess) return product;
-        if (newBasket.count > product.items[0].availability || newBasket.count < 1 ){
+        const productResp: ProductsResp = await this.productsService.getOne(newBasket.productId);
+        if (!productResp.isSuccess) return productResp;
+        if (newBasket.count > productResp.items[0].availability || newBasket.count < 1 ) {
             return {
                 isSuccess: false,
                 status: ResponseStatus.notAcceptable,
                 errors: [
                     "Count must be greater than zero and not greater than product availability",
                     `Count = ${newBasket.count}`,
-                    `Availability = ${product.items[0].availability}`,
+                    `Availability = ${productResp.items[0].availability}`,
                 ],
             }
         }
 
-        const user: UserResp = await this.userService.getOne(newBasket.userId);
-        if (!user.isSuccess) return user;
+        const userResp: UserResp = await this.userService.getOne(newBasket.userId);
+        if (!userResp.isSuccess) return userResp;
 
-        if (user.isSuccess === true && product.isSuccess === true) {
-            const basket = new BasketsEntity();
-            basket.count = newBasket.count;
-            basket.user = user.users[0];
-            basket.product = product.items[0];
-            await basket.save();
 
+        const basketExists: BasketsEntity = await BasketsEntity.findOne({
+            relations: ['product', 'user'],
+            where:{
+                user: userResp.users[0],
+                product: productResp.items[0],
+            }
+        })
+        if (basketExists) {
+            const basket = await BasketsEntity.update(basketExists.id, {
+                count: newBasket.count,
+                createdAt: new Date(),
+            })
             if (basket) {
                 return {
                     isSuccess: true,
                     status: ResponseStatus.ok,
-                    id: basket.id,
+                    id: basketExists.id
                 }
+            }
+        }
+
+        const basket = new BasketsEntity();
+        basket.count = newBasket.count;
+        basket.user = userResp.users[0];
+        basket.product = productResp.items[0];
+        await basket.save();
+
+        if (basket) {
+            return {
+                isSuccess: true,
+                status: ResponseStatus.ok,
+                id: basket.id,
             }
         }
     }
