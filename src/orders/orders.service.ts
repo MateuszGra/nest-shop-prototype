@@ -9,6 +9,8 @@ import { BasketsService } from "../baskets/baskets.service";
 import { BasketResp } from "../interfaces/basket";
 import { ProductsResp } from "../interfaces/products";
 import { v4 as uuid } from 'uuid';
+import { MailService } from "../mail/mail.service";
+import { orderEmailTemplate } from "../templates/email/order";
 
 @Injectable()
 export class OrdersService {
@@ -16,6 +18,7 @@ export class OrdersService {
         @Inject(ProductsService) private productsService: ProductsService,
         @Inject(UsersService) private userService: UsersService,
         @Inject(BasketsService) private basketService: BasketsService,
+        @Inject(MailService) private mailService: MailService,
     ) {
     }
 
@@ -51,6 +54,13 @@ export class OrdersService {
 
         const basketResp: BasketResp = await this.basketService.getUserBasket(userId);
         if (!basketResp.isSuccess) return basketResp;
+        if (basketResp.basket.length === 0 ) {
+            return {
+                isSuccess: false,
+                status: ResponseStatus.notFound,
+                errors: ['Basket is empty'],
+            }
+        }
 
         const date = new Date();
         const orderNumber = uuid();
@@ -74,6 +84,13 @@ export class OrdersService {
                 await order.save();
             }
         }
+
+        await this.mailService.sendMail(
+            userResp.users[0].email,
+            'Potwierdzenie zamówienia',
+            orderEmailTemplate(await this.getOneByOrderNumber(orderNumber))
+        )
+
         await this.basketService.clearUserBasket(userId);
 
         return {

@@ -5,7 +5,7 @@ import { MailModule } from "../mail/mail.module";
 
 @Module({
   imports: [
-      forwardRef(() => MailModule)
+      forwardRef(() => MailModule),
   ],
   controllers: [UsersController],
   providers: [UsersService],
