@@ -1,5 +1,5 @@
 export = {
-    transport: `smtp://test@mgrabowski.eu:k77SFvub7WxE1Bfceqfv@mail23.mydevil.net`,
+    transport: ``,
     defaults: {
         from: 'test@mgrabowski.eu',
     },
