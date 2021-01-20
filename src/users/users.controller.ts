@@ -27,10 +27,15 @@ export class UsersController {
         return await this.usersService.getOne(id);
     }
 
-    @Post('/')
-    async register(
+    @Post('/register-user')
+    async registerUser(
         @Body() newUser: registerUserDTO,
     ): Promise<UserResp> {
-        return await this.usersService.register(newUser);
+        return await this.usersService.registerUser(newUser);
+    }
+
+    @Post('register-guest')
+    async registerGuest(): Promise<UserResp> {
+        return await this.usersService.registerGuest();
     }
 }

@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { UsersEntity } from "./users.entity";
-import { UserResp } from "../interfaces/users";
+import { UserResp, UsersRole } from "../interfaces/users";
 import { ResponseStatus } from "../interfaces/response-status";
 import { registerUserDTO } from "./dto/register-user";
 import { MailService } from "../mail/mail.service";
@@ -48,7 +48,7 @@ export class UsersService {
         }
     }
 
-    async register(newUser: registerUserDTO): Promise<UserResp> {
+    async registerUser(newUser: registerUserDTO): Promise<UserResp> {
         const userExist = await UsersEntity.findOne({
             email: newUser.email,
         })
@@ -68,6 +68,7 @@ export class UsersService {
 
         const user = new UsersEntity();
         Object.assign(user, newUser);
+        user.role = UsersRole.user;
         await user.save();
 
         if (user) {
@@ -77,5 +78,20 @@ export class UsersService {
                 id: user.id,
             }
         }
+    }
+
+    async registerGuest(): Promise<UserResp> {
+        const guest = new UsersEntity();
+        guest.role = UsersRole.guest;
+        await guest.save();
+
+        if (guest) {
+            return {
+                isSuccess: true,
+                status: ResponseStatus.ok,
+                id: guest.id,
+            }
+        }
+
     }
 }

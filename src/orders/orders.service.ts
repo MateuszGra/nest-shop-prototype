@@ -47,28 +47,24 @@ export class OrdersService {
 
     async addOne(userId: string): Promise<OrderResp> {
         const userResp: UserResp = await this.userService.getOne(userId);
-        if (!userResp.isSuccess) {
-            return {
-                isSuccess: false,
-                status: ResponseStatus.notFound,
-                errors: [`User (${userId}) not found`],
-            }
-        }
+        if (!userResp.isSuccess) return userResp;
 
         const basketResp: BasketResp = await this.basketService.getUserBasket(userId);
-        if (!basketResp.isSuccess) {
-            return {
-                isSuccess: false,
-                status: ResponseStatus.notFound,
-                errors: [`User basket (${userId}) is empty`],
-            }
-        }
+        if (!basketResp.isSuccess) return basketResp;
 
         const date = new Date();
         const orderNumber = uuid();
         for await (const basket of basketResp.basket) {
             const productResp: ProductsResp = await this.productsService.getOne(basket.product.id);
-            if(productResp.isSuccess) {
+            if (
+                productResp.isSuccess
+                &&
+                productResp.items[0].availability < basket.count
+            ) {
+                basket.count = productResp.items[0].availability
+            }
+
+            if (productResp.isSuccess && basket.count > 0) {
                 const order = new OrdersEntity();
                 order.count = basket.count;
                 order.createdAt = date;

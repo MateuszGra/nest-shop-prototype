@@ -7,8 +7,8 @@ import { BasketResp } from "../interfaces/basket";
 import { ProductsResp } from "../interfaces/products";
 import { UserResp } from "../interfaces/users";
 import { ResponseStatus } from "../interfaces/response-status";
-import {UsersEntity} from "../users/users.entity";
-import {ProductsEntity} from "../products/products.entity";
+import { UsersEntity } from "../users/users.entity";
+import { ProductsEntity } from "../products/products.entity";
 
 @Injectable()
 export class BasketsService {
@@ -20,14 +20,8 @@ export class BasketsService {
 
 
     async getUserBasket(userId: string): Promise<BasketResp> {
-        const user: BasketResp = await this.userService.getOne(userId);
-        if(!user.isSuccess){
-            return {
-                isSuccess: false,
-                status: ResponseStatus.notFound,
-                errors: [`User (${userId}) not found`],
-            }
-        }
+        const userResp: UserResp = await this.userService.getOne(userId);
+        if(!userResp.isSuccess) return userResp;
 
         const [basket, count]: [BasketsEntity[], number] = await BasketsEntity.findAndCount({
             relations: ['product'],
@@ -46,8 +40,8 @@ export class BasketsService {
     }
 
     async clearUserBasket(userId: string): Promise<BasketResp> {
-        const user: UserResp = await this.userService.getOne(userId);
-        if(!user.isSuccess) {
+        const userResp: UserResp = await this.userService.getOne(userId);
+        if(!userResp.isSuccess) {
             return {
                 isSuccess: false,
                 status: ResponseStatus.notFound,
@@ -55,7 +49,7 @@ export class BasketsService {
             }
         }
         await BasketsEntity.delete({
-            user: user.users[0],
+            user: userResp.users[0],
         });
         return {
             isSuccess: true,
@@ -103,7 +97,9 @@ export class BasketsService {
     async createBasket(newBasket: AddToBasketDTO, user: UsersEntity, product: ProductsEntity): Promise<BasketResp> {
         if (newBasket.count === undefined) newBasket.count = 1;
         const availabilityResp = await this.availability(newBasket.count, product);
+        console.log('create1')
         if (!availabilityResp.isSuccess) return availabilityResp;
+        console.log('create2')
 
         const basket = new BasketsEntity();
         basket.count = newBasket.count;
@@ -130,6 +126,11 @@ export class BasketsService {
                     `Count = ${count}`,
                     `Availability = ${product.availability}`,
                 ],
+            }
+        } else {
+            return {
+                isSuccess: true,
+                status: ResponseStatus.ok,
             }
         }
     }
