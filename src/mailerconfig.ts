@@ -1,6 +1,6 @@
 export = {
-    transport: `smtp://test@mgrabowski.eu:k77SFvub7WxE1Bfceqfv@mail23.mydevil.net`,
+    transport: `smtp://admin123:admin456@localhost:2500`,
     defaults: {
-        from: 'test@mgrabowski.eu',
+        from: 'admin@test.example.com',
     },
 };
