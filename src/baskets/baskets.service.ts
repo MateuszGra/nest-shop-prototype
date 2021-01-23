@@ -85,6 +85,7 @@ export class BasketsService {
             count: newBasket.count,
             createdAt: new Date(),
         })
+
         if (basket) {
             return {
                 isSuccess: true,
@@ -106,6 +107,7 @@ export class BasketsService {
             user: user,
             product: product,
         });
+        await basket.save();
 
         if (basket) {
             return {

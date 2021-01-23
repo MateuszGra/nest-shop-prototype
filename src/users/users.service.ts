@@ -84,6 +84,7 @@ export class UsersService {
         const guest = UsersEntity.create({
             role: UsersRole.guest
         });
+        await guest.save();
 
         if (guest) {
             return {
