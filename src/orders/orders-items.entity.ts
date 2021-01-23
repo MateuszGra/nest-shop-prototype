@@ -1,8 +1,9 @@
-import { BaseEntity, Column, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { ProductsEntity } from "../products/products.entity";
 import { OrdersEntity } from "./orders.entity";
 import { OrdersItemsData } from "../interfaces/orders";
 
+@Entity()
 export class OrdersItemsEntity extends BaseEntity implements OrdersItemsData {
     @PrimaryGeneratedColumn('uuid')
     id: string;
