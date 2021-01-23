@@ -81,9 +81,9 @@ export class UsersService {
     }
 
     async registerGuest(): Promise<UserResp> {
-        const guest = new UsersEntity();
-        guest.role = UsersRole.guest;
-        await guest.save();
+        const guest = UsersEntity.create({
+            role: UsersRole.guest
+        });
 
         if (guest) {
             return {

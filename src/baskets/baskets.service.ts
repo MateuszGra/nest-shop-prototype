@@ -101,11 +101,11 @@ export class BasketsService {
         if (!availabilityResp.isSuccess) return availabilityResp;
         console.log('create2')
 
-        const basket = new BasketsEntity();
-        basket.count = newBasket.count;
-        basket.user = user;
-        basket.product = product;
-        await basket.save();
+        const basket = BasketsEntity.create({
+            count: newBasket.count,
+            user: user,
+            product: product,
+        });
 
         if (basket) {
             return {
