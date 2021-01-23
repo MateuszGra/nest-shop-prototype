@@ -3,7 +3,7 @@ import { OrderResp } from "../../interfaces/orders";
 export function orderEmailTemplate(ordersResp: OrderResp): string {
     if(ordersResp.isSuccess) {
         let ordersTable: string = '';
-        ordersResp.order.forEach( order => {
+        ordersResp.orderItems.forEach( order => {
             ordersTable += `
             <tr>
                 <td>${order.product.name}</td>

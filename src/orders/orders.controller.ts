@@ -11,7 +11,7 @@ export class OrdersController {
 
     @Get('/:id')
     async showOneByOrderNumber(
-        @Param('orderNumber', ParseUUIDPipe) id: string,
+        @Param('id', ParseUUIDPipe) id: string,
     ): Promise<OrderResp> {
         return await this.ordersService.getOneByOrderNumber(id);
     }

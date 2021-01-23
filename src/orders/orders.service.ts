@@ -21,20 +21,21 @@ export class OrdersService {
 
     async getOneByOrderNumber(id: string): Promise<OrderResp> {
         const [orderItems, count]: [OrdersItemsEntity[], number] = await OrdersItemsEntity.findAndCount({
-            relations: ['order'],
+            relations: ['order', 'product'],
             where: {
                 order: id,
             }
         });
-        if (orderItems) {
+        if (orderItems.length > 0) {
             const productsPrice = orderItems.map(item => item.product.price * item.count);
             const orderPrice = productsPrice.reduce((prev, curr) => prev + curr, 0);
             return {
                 isSuccess: true,
                 status: ResponseStatus.ok,
+                orderNumber: orderItems[0].order.id,
                 count: count,
                 totalPrice: Number(orderPrice.toFixed(2)),
-                order: orderItems,
+                orderItems: orderItems,
             }
         } else {
             return {
@@ -61,6 +62,7 @@ export class OrdersService {
         const order: OrdersEntity = OrdersEntity.create({
             user: userResp.users[0],
         })
+        await order.save();
 
         for await (const basket of basketResp.basket) {
             if (basket.product.availability < basket.count) {
@@ -68,11 +70,12 @@ export class OrdersService {
             }
 
             if (basket.count > 0) {
-                OrdersItemsEntity.create({
+                const orderItem = OrdersItemsEntity.create({
                     count: basket.count,
                     product: basket.product,
                     order: order,
                 });
+                await orderItem.save();
             }
         }
 
