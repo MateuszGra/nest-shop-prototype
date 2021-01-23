@@ -1,28 +1,22 @@
-import { BaseEntity, Column, Entity, Index, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { OrdersData } from "../interfaces/orders";
 import { UsersEntity } from "../users/users.entity";
-import { ProductsEntity } from "../products/products.entity";
+import { OrdersItemsEntity } from "./orders-items.entity";
 
 @Entity()
 export class OrdersEntity extends BaseEntity implements OrdersData {
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
-    @Column()
-    count: number;
-
-    @Column()
+    @Column({
+        default: () => 'CURRENT_TIMESTAMP',
+    })
     createdAt: Date;
-
-    @Column('uuid')
-    @Index()
-    orderNumber: string;
-
-    @ManyToOne( type => ProductsEntity, entity => entity.orders )
-    @JoinColumn()
-    product: ProductsEntity;
 
     @ManyToOne( type => UsersEntity, entity => entity.orders )
     @JoinColumn()
     user: UsersEntity;
+
+    @OneToMany( type => OrdersItemsEntity, entity => entity.order)
+    orderItems: OrdersItemsEntity[];
 }

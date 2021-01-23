@@ -9,11 +9,11 @@ export class OrdersController {
     ) {
     }
 
-    @Get('/:orderNumber')
+    @Get('/:id')
     async showOneByOrderNumber(
-        @Param('orderNumber', ParseUUIDPipe) orderNumber: string,
+        @Param('orderNumber', ParseUUIDPipe) id: string,
     ): Promise<OrderResp> {
-        return await this.ordersService.getOneByOrderNumber(orderNumber);
+        return await this.ordersService.getOneByOrderNumber(id);
     }
 
     @Post('/:userId')

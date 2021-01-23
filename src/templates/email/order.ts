@@ -6,9 +6,7 @@ export function orderEmailTemplate(ordersResp: OrderResp): string {
         ordersResp.order.forEach( order => {
             ordersTable += `
             <tr>
-                <td>${order.product.name}</td>
                 <td>${order.count}</td>
-                <td>${order.product.price} zł</td>
             </tr>`
         })
 

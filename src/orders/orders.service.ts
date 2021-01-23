@@ -4,46 +4,43 @@ import { ResponseStatus } from "../interfaces/response-status";
 import { OrdersEntity } from "./orders.entity";
 import { UserResp } from "../interfaces/users";
 import { UsersService } from "../users/users.service";
-import { ProductsService } from "../products/products.service";
 import { BasketsService } from "../baskets/baskets.service";
 import { BasketResp } from "../interfaces/basket";
-import { ProductsResp } from "../interfaces/products";
-import { v4 as uuid } from 'uuid';
 import { MailService } from "../mail/mail.service";
 import { orderEmailTemplate } from "../templates/email/order";
+import { OrdersItemsEntity } from "./orders-items.entity";
 
 @Injectable()
 export class OrdersService {
     constructor(
-        @Inject(ProductsService) private productsService: ProductsService,
         @Inject(UsersService) private userService: UsersService,
         @Inject(BasketsService) private basketService: BasketsService,
         @Inject(MailService) private mailService: MailService,
     ) {
     }
 
-    async getOneByOrderNumber(orderNumber: string): Promise<OrderResp> {
-        const [order, count]: [OrdersEntity[], number] = await OrdersEntity.findAndCount({
-            relations: ['product'],
+    async getOneByOrderNumber(id: string): Promise<OrderResp> {
+        const [orderItems, count]: [OrdersItemsEntity[], number] = await OrdersItemsEntity.findAndCount({
+            relations: ['order'],
             where: {
-                orderNumber
+                order: id,
             }
         });
-        if (order.length > 0) {
-            const productsPrice = order.map(item => item.product.price * item.count);
+        if (orderItems) {
+            const productsPrice = orderItems.map(item => item.product.price * item.count);
             const orderPrice = productsPrice.reduce((prev, curr) => prev + curr, 0);
             return {
                 isSuccess: true,
                 status: ResponseStatus.ok,
                 count: count,
                 totalPrice: Number(orderPrice.toFixed(2)),
-                order: order,
+                order: orderItems,
             }
         } else {
             return {
                 isSuccess: false,
                 status: ResponseStatus.ok,
-                errors: [`Order (${orderNumber}) not found`],
+                errors: [`Order (${id}) not found`],
             }
         }
     }
@@ -61,34 +58,28 @@ export class OrdersService {
                 errors: ['Basket is empty'],
             }
         }
+        const order: OrdersEntity = OrdersEntity.create({
+            user: userResp.users[0],
+        })
 
-        const date = new Date();
-        const orderNumber = uuid();
         for await (const basket of basketResp.basket) {
-            const productResp: ProductsResp = await this.productsService.getOne(basket.product.id);
-            if (
-                productResp.isSuccess
-                &&
-                productResp.items[0].availability < basket.count
-            ) {
-                basket.count = productResp.items[0].availability
+            if (basket.product.availability < basket.count) {
+                basket.count = basket.product.availability
             }
 
-            if (productResp.isSuccess && basket.count > 0) {
-                const order = new OrdersEntity();
-                order.count = basket.count;
-                order.createdAt = date;
-                order.orderNumber = orderNumber;
-                order.product = productResp.items[0];
-                order.user = userResp.users[0];
-                await order.save();
+            if (basket.count > 0) {
+                OrdersItemsEntity.create({
+                    count: basket.count,
+                    product: basket.product,
+                    order: order,
+                });
             }
         }
 
         await this.mailService.sendMail(
             userResp.users[0].email,
             'Potwierdzenie zamówienia',
-            orderEmailTemplate(await this.getOneByOrderNumber(orderNumber))
+            orderEmailTemplate(await this.getOneByOrderNumber(order.id))
         )
 
         await this.basketService.clearUserBasket(userId);
@@ -96,7 +87,7 @@ export class OrdersService {
         return {
             isSuccess: true,
             status: ResponseStatus.ok,
-            orderNumber: orderNumber,
+            orderNumber: order.id,
         }
     }
 }
