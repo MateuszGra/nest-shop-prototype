@@ -8,7 +8,10 @@ export class OrdersItemsEntity extends BaseEntity implements OrdersItemsData {
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
-    @Column()
+    @Column({
+        type: "int",
+        precision: 6,
+    })
     count: number;
 
     @ManyToOne( type => ProductsEntity, entity => entity.orders )

@@ -8,13 +8,19 @@ export class UsersEntity extends BaseEntity implements UserData {
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
-    @Column()
+    @Column({
+        length: 100,
+    })
     name: string;
 
-    @Column()
+    @Column({
+        length: 100,
+    })
     surname: string;
 
-    @Column()
+    @Column({
+        length: 100,
+    })
     email: string;
 
     @Column()

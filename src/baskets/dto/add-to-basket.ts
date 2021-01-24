@@ -1,4 +1,4 @@
-import {IsInt, IsOptional, IsUUID} from "class-validator";
+import { IsInt, IsOptional, IsUUID, Max, Min } from "class-validator";
 
 export class AddToBasketDTO {
     @IsUUID()
@@ -9,5 +9,7 @@ export class AddToBasketDTO {
 
     @IsOptional()
     @IsInt()
+    @Min(1)
+    @Max(999999)
     count: number;
 }

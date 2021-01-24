@@ -1,17 +1,21 @@
-import { IsInt, IsNumber, IsString, Length } from "class-validator";
+import { IsInt, IsNumber, IsString, Length, Max, Min } from "class-validator";
 
 export class newProductDTO {
     @IsString()
-    @Length(2)
+    @Length(2, 300)
     name: string;
 
     @IsInt()
+    @Min(1)
+    @Max(999999)
     availability: number;
 
     @IsString()
     @Length(2)
     description: string;
 
-    @IsNumber()
+    @IsNumber({maxDecimalPlaces: 2})
+    @Min(0.01)
+    @Max(9999999.99)
     price: number;
 }

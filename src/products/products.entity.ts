@@ -8,10 +8,15 @@ export class ProductsEntity extends BaseEntity implements ProductsData {
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
-    @Column()
+    @Column({
+        length: 300,
+    })
     name: string;
 
-    @Column()
+    @Column({
+        type: "int",
+        precision: 6,
+    })
     availability: number;
 
     @Column({

@@ -9,7 +9,10 @@ export class BasketsEntity extends BaseEntity implements BasketData {
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
-    @Column()
+    @Column({
+        type: "int",
+        precision: 6,
+    })
     count: number;
 
     @Column({
