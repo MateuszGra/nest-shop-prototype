@@ -1,4 +1,4 @@
-import { BaseEntity, Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { BaseEntity, Column, Entity, Index, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { UserData, UsersRole }  from "../interfaces/users";
 import { BasketsEntity } from "../baskets/baskets.entity";
 import { OrdersEntity } from "../orders/orders.entity";
@@ -6,6 +6,7 @@ import { OrdersEntity } from "../orders/orders.entity";
 @Entity()
 export class UsersEntity extends BaseEntity implements UserData {
     @PrimaryGeneratedColumn('uuid')
+    @Index()
     id: string;
 
     @Column({

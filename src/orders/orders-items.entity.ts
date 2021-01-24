@@ -1,4 +1,4 @@
-import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import {BaseEntity, Column, Entity, Index, JoinColumn, ManyToOne, PrimaryGeneratedColumn} from "typeorm";
 import { ProductsEntity } from "../products/products.entity";
 import { OrdersEntity } from "./orders.entity";
 import { OrdersItemsData } from "../interfaces/orders";
@@ -20,5 +20,6 @@ export class OrdersItemsEntity extends BaseEntity implements OrdersItemsData {
 
     @ManyToOne(type => OrdersEntity, entity => entity.orderItems)
     @JoinColumn()
+    @Index()
     order: OrdersEntity;
 }

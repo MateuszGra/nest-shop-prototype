@@ -1,4 +1,4 @@
-import { BaseEntity, Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import {BaseEntity, Column, Entity, Index, OneToMany, PrimaryGeneratedColumn} from "typeorm";
 import { ProductsData } from "../interfaces/products";
 import { BasketsEntity } from "../baskets/baskets.entity";
 import { OrdersItemsEntity } from "../orders/orders-items.entity";
@@ -6,6 +6,7 @@ import { OrdersItemsEntity } from "../orders/orders-items.entity";
 @Entity()
 export class ProductsEntity extends BaseEntity implements ProductsData {
     @PrimaryGeneratedColumn('uuid')
+    @Index()
     id: string;
 
     @Column({
