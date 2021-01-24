@@ -20,22 +20,21 @@ export class OrdersService {
     }
 
     async getOneByOrderNumber(id: string): Promise<OrderResp> {
-        const [orderItems, count]: [OrdersItemsEntity[], number] = await OrdersItemsEntity.findAndCount({
-            relations: ['order', 'product'],
-            where: {
-                order: id,
-            }
-        });
-        if (orderItems.length > 0) {
-            const productsPrice = orderItems.map(item => item.product.price * item.count);
+        const order: OrdersEntity = await OrdersEntity.findOne({
+            relations: ['orderItems', 'orderItems.product'],
+            where: { id }
+        })
+
+        if (order) {
+            const productsPrice = order.orderItems.map(item => item.product.price * item.count);
             const orderPrice = productsPrice.reduce((prev, curr) => prev + curr, 0);
             return {
                 isSuccess: true,
                 status: ResponseStatus.ok,
-                orderNumber: orderItems[0].order.id,
-                count: count,
+                orderNumber: order.id,
+                count: order.orderItems.length,
                 totalPrice: Number(orderPrice.toFixed(2)),
-                orderItems: orderItems,
+                orderItems: order.orderItems,
             }
         } else {
             return {
