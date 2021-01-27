@@ -4,9 +4,6 @@ export class AddToBasketDTO {
     @IsUUID()
     productId: string;
 
-    @IsUUID()
-    userId: string;
-
     @IsOptional()
     @IsInt()
     @Min(1)

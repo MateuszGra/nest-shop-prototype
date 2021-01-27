@@ -26,9 +26,8 @@ export class ProductsEntity extends BaseEntity implements ProductsData {
     description: string;
 
     @Column({
-        type: "float",
-        precision: 7,
-        scale: 2,
+        type: "int",
+        precision: 9,
     })
     price: number
 

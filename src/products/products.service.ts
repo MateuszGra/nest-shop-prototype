@@ -12,6 +12,8 @@ export class ProductsService {
                 price: "ASC",
             },
         });
+        await items.forEach(item => item.price = item.price / 100);
+
         if (items.length > 0) {
             return {
                 isSuccess: true,
@@ -46,11 +48,12 @@ export class ProductsService {
     }
 
     async addOne(newProduct: newProductDTO): Promise<ProductsResp> {
+        newProduct.price = newProduct.price * 100;
         const product = new ProductsEntity();
         Object.assign(product, newProduct);
         await product.save();
 
-        if(product) {
+        if (product) {
             return {
                 isSuccess: true,
                 status: ResponseStatus.ok,

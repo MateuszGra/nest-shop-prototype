@@ -57,11 +57,11 @@ export class BasketsService {
         }
     }
 
-    async addToBasket(newBasket: AddToBasketDTO): Promise<BasketResp> {
+    async addToBasket(newBasket: AddToBasketDTO, userId: string): Promise<BasketResp> {
         const productResp: ProductsResp = await this.productsService.getOne(newBasket.productId);
         if (!productResp.isSuccess) return productResp;
 
-        const userResp: UserResp = await this.userService.getOne(newBasket.userId);
+        const userResp: UserResp = await this.userService.getOne(userId);
         if (!userResp.isSuccess) return userResp;
 
 

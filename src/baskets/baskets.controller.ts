@@ -19,11 +19,12 @@ export class BasketsController {
         return await this.basketService.getUserBasket(userId);
     }
 
-    @Post('/')
+    @Post('/:userId')
     async addNew(
+        @Param('userId', ParseUUIDPipe) userId: string,
         @Body() newBasket: AddToBasketDTO,
     ): Promise<BasketResp> {
-        return await this.basketService.addToBasket(newBasket);
+        return await this.basketService.addToBasket(newBasket, userId);
     }
 
     @Delete('/:userId')
