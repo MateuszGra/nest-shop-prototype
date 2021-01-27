@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { OrderResp } from "../interfaces/orders";
+import { OrderResp, OrdersRecalculateData } from "../interfaces/orders";
 import { ResponseStatus } from "../interfaces/response-status";
 import { OrdersEntity } from "./orders.entity";
 import { UserResp } from "../interfaces/users";
@@ -26,14 +26,13 @@ export class OrdersService {
         })
 
         if (order) {
-            const productsPrice = order.orderItems.map(item => item.product.price * item.count);
-            const orderPrice = productsPrice.reduce((prev, curr) => prev + curr, 0);
+            const orderRecalculate = await this.priceRecalculate(order.orderItems)
             return {
                 isSuccess: true,
                 status: ResponseStatus.ok,
                 orderNumber: order.id,
                 count: order.orderItems.length,
-                totalPrice: Number(orderPrice.toFixed(2)),
+                totalPrice: orderRecalculate.totalPrice,
                 orderItems: order.orderItems,
             }
         } else {
@@ -58,16 +57,13 @@ export class OrdersService {
                 errors: ['Basket is empty'],
             }
         }
+
         const order: OrdersEntity = OrdersEntity.create({
             user: userResp.users[0],
         })
         await order.save();
 
         for await (const basket of basketResp.basket) {
-            if (basket.product.availability < basket.count) {
-                basket.count = basket.product.availability
-            }
-
             if (basket.count > 0) {
                 const orderItem = OrdersItemsEntity.create({
                     count: basket.count,
@@ -90,6 +86,18 @@ export class OrdersService {
             isSuccess: true,
             status: ResponseStatus.ok,
             orderNumber: order.id,
+        }
+    }
+
+    async priceRecalculate(order: OrdersItemsEntity[]): Promise<OrdersRecalculateData> {
+        await order.forEach(item => item.product.price = item.product.price / 100)
+
+        const productPrice = await order.map(item => item.product.price * item.count);
+        const totalPrice = await productPrice.reduce((prev, curr) => prev + curr, 0);
+
+        return {
+            totalPrice: totalPrice,
+            items: order,
         }
     }
 }

@@ -3,8 +3,8 @@ import { BasketsEntity } from "./baskets.entity";
 import { AddToBasketDTO } from "./dto/add-to-basket";
 import { ProductsService } from "../products/products.service";
 import { UsersService } from "../users/users.service";
-import { BasketResp } from "../interfaces/basket";
-import { ProductsResp } from "../interfaces/products";
+import { BasketRecalculateData, BasketResp } from "../interfaces/basket";
+import { ProductsResp} from "../interfaces/products";
 import { UserResp } from "../interfaces/users";
 import { ResponseStatus } from "../interfaces/response-status";
 import { UsersEntity } from "../users/users.entity";
@@ -27,15 +27,15 @@ export class BasketsService {
             relations: ['product'],
             where: { user: userId }
         });
-        const productsPrice = basket.map(item => item.product.price * item.count);
-        const basketPrice = productsPrice.reduce((prev, curr) => prev + curr, 0);
+
+        const basketRecalculate = await this.priceRecalculate(basket);
 
         return {
             isSuccess: true,
             status: ResponseStatus.ok,
             count: count,
-            totalPrice: Number(basketPrice.toFixed(2)),
-            basket: basket,
+            totalPrice: basketRecalculate.totalPrice,
+            basket: basketRecalculate.items,
         }
     }
 
@@ -124,7 +124,7 @@ export class BasketsService {
                 isSuccess: false,
                 status: ResponseStatus.notAcceptable,
                 errors: [
-                    "Count must be greater than zero and not greater than product availability",
+                    'Count must be greater than zero and not greater than product availability',
                     `Count = ${count}`,
                     `Availability = ${product.availability}`,
                 ],
@@ -134,6 +134,25 @@ export class BasketsService {
                 isSuccess: true,
                 status: ResponseStatus.ok,
             }
+        }
+    }
+
+    async priceRecalculate(basket: BasketsEntity[]): Promise<BasketRecalculateData> {
+        await basket.forEach((item, index) => {
+            if (item.count > item.product.availability) item.count = item.product.availability;
+            if (item.count === 0) {
+                basket.splice(index, 1)
+                item.remove();
+            }
+        })
+        await basket.forEach(item => item.product.price = item.product.price / 100)
+
+        const productPrice = await basket.map(item => item.product.price * item.count);
+        const totalPrice = await productPrice.reduce((prev, curr) => prev + curr, 0);
+
+        return {
+            totalPrice: totalPrice,
+            items: basket,
         }
     }
 }
