@@ -63,13 +63,12 @@ export class ProductsService {
     }
 
     async priceRecalculate(products): Promise<RecalculateData> {
-        await products.forEach(item => item.product.price = item.product.price / 100)
-
         const productPrice = await products.map(item => item.product.price * item.count);
         const totalPrice = await productPrice.reduce((prev, curr) => prev + curr, 0);
+        await products.forEach(item => item.product.price = item.product.price / 100)
 
         return {
-            totalPrice: totalPrice,
+            totalPrice: totalPrice / 100,
             items: products,
         }
     }
