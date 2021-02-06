@@ -51,6 +51,7 @@ export class ProductsService {
         newProduct.price = newProduct.price * 100;
         const product = new ProductsEntity();
         Object.assign(product, newProduct);
+        product.sold = 0;
         await product.save();
 
         if (product) {
@@ -71,5 +72,12 @@ export class ProductsService {
             totalPrice: totalPrice / 100,
             items: products,
         }
+    }
+
+    async soldUpdate(count: number, product: ProductsEntity) {
+       await ProductsEntity.update(product.id, {
+            availability: product.availability - count,
+            sold: product.sold + count,
+       })
     }
 }

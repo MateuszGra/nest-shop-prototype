@@ -9,7 +9,7 @@ import { BasketResp } from "../interfaces/basket";
 import { MailService } from "../mail/mail.service";
 import { orderEmailTemplate } from "../templates/email/order";
 import { OrdersItemsEntity } from "./orders-items.entity";
-import {ProductsService} from "../products/products.service";
+import { ProductsService } from "../products/products.service";
 
 @Injectable()
 export class OrdersService {
@@ -73,6 +73,7 @@ export class OrdersService {
                     order: order,
                 });
                 await orderItem.save();
+                await this.productsService.soldUpdate(basket.count, basket.product);
             }
         }
 

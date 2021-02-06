@@ -31,6 +31,11 @@ export class ProductsEntity extends BaseEntity implements ProductsData {
     })
     price: number
 
+    @Column({
+        type: "int",
+    })
+    sold: number
+
     @OneToMany(type => BasketsEntity, entity => entity.product)
     basket: BasketsEntity[];
 
