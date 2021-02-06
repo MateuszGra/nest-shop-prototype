@@ -9,6 +9,11 @@ export interface ProductsData {
     price: number,
 }
 
+export interface RecalculateData {
+    totalPrice: number,
+    items: [],
+}
+
 export type ProductsResp = {
     isSuccess: true,
     status: ResponseStatus,

@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { OrderResp, OrdersRecalculateData } from "../interfaces/orders";
+import { OrderResp } from "../interfaces/orders";
 import { ResponseStatus } from "../interfaces/response-status";
 import { OrdersEntity } from "./orders.entity";
 import { UserResp } from "../interfaces/users";
@@ -9,10 +9,12 @@ import { BasketResp } from "../interfaces/basket";
 import { MailService } from "../mail/mail.service";
 import { orderEmailTemplate } from "../templates/email/order";
 import { OrdersItemsEntity } from "./orders-items.entity";
+import {ProductsService} from "../products/products.service";
 
 @Injectable()
 export class OrdersService {
     constructor(
+        @Inject(ProductsService) private productsService: ProductsService,
         @Inject(UsersService) private userService: UsersService,
         @Inject(BasketsService) private basketService: BasketsService,
         @Inject(MailService) private mailService: MailService,
@@ -26,7 +28,7 @@ export class OrdersService {
         })
 
         if (order) {
-            const orderRecalculate = await this.priceRecalculate(order.orderItems)
+            const orderRecalculate = await this.productsService.priceRecalculate(order.orderItems)
             return {
                 isSuccess: true,
                 status: ResponseStatus.ok,
@@ -86,18 +88,6 @@ export class OrdersService {
             isSuccess: true,
             status: ResponseStatus.ok,
             orderNumber: order.id,
-        }
-    }
-
-    async priceRecalculate(order: OrdersItemsEntity[]): Promise<OrdersRecalculateData> {
-        await order.forEach(item => item.product.price = item.product.price / 100)
-
-        const productPrice = await order.map(item => item.product.price * item.count);
-        const totalPrice = await productPrice.reduce((prev, curr) => prev + curr, 0);
-
-        return {
-            totalPrice: totalPrice,
-            items: order,
         }
     }
 }

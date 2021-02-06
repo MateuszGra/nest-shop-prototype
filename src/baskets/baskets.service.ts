@@ -3,7 +3,7 @@ import { BasketsEntity } from "./baskets.entity";
 import { AddToBasketDTO } from "./dto/add-to-basket";
 import { ProductsService } from "../products/products.service";
 import { UsersService } from "../users/users.service";
-import { BasketRecalculateData, BasketResp } from "../interfaces/basket";
+import { BasketResp } from "../interfaces/basket";
 import { ProductsResp} from "../interfaces/products";
 import { UserResp } from "../interfaces/users";
 import { ResponseStatus } from "../interfaces/response-status";
@@ -28,7 +28,7 @@ export class BasketsService {
             where: { user: userId }
         });
 
-        const basketRecalculate = await this.priceRecalculate(basket);
+        const basketRecalculate = await this.productsService.priceRecalculate(basket);
 
         return {
             isSuccess: true,
@@ -134,25 +134,6 @@ export class BasketsService {
                 isSuccess: true,
                 status: ResponseStatus.ok,
             }
-        }
-    }
-
-    async priceRecalculate(basket: BasketsEntity[]): Promise<BasketRecalculateData> {
-        await basket.forEach((item, index) => {
-            if (item.count > item.product.availability) item.count = item.product.availability;
-            if (item.count === 0) {
-                basket.splice(index, 1)
-                item.remove();
-            }
-        })
-        await basket.forEach(item => item.product.price = item.product.price / 100)
-
-        const productPrice = await basket.map(item => item.product.price * item.count);
-        const totalPrice = await productPrice.reduce((prev, curr) => prev + curr, 0);
-
-        return {
-            totalPrice: totalPrice,
-            items: basket,
         }
     }
 }

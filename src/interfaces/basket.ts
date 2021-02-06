@@ -11,11 +11,6 @@ export interface BasketData {
     createdAt: Date;
 }
 
-export interface BasketRecalculateData {
-    totalPrice: number,
-    items: BasketsEntity[],
-}
-
 export type BasketResp = {
     isSuccess: true,
     status: ResponseStatus,

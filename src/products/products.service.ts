@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ProductsEntity } from "./products.entity";
-import { ProductsResp } from "../interfaces/products";
+import { ProductsResp, RecalculateData } from "../interfaces/products";
 import { ResponseStatus } from "../interfaces/response-status";
 import { newProductDTO } from "./dto/new-product";
 
@@ -59,6 +59,18 @@ export class ProductsService {
                 status: ResponseStatus.ok,
                 id: product.id,
             }
+        }
+    }
+
+    async priceRecalculate(products): Promise<RecalculateData> {
+        await products.forEach(item => item.product.price = item.product.price / 100)
+
+        const productPrice = await products.map(item => item.product.price * item.count);
+        const totalPrice = await productPrice.reduce((prev, curr) => prev + curr, 0);
+
+        return {
+            totalPrice: totalPrice,
+            items: products,
         }
     }
 }
