@@ -8,7 +8,7 @@ export interface BasketData {
     user: UsersEntity,
     product: ProductsEntity,
     count: number,
-    createdAt: Date;
+    createdAt: Date,
 }
 
 export type BasketResp = {

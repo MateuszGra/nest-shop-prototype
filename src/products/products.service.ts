@@ -12,9 +12,10 @@ export class ProductsService {
                 price: "ASC",
             },
         });
-        await items.forEach(item => item.price = item.price / 100);
 
         if (items.length > 0) {
+            items.forEach(item => item = this.itemPriceRecalculate(item))
+
             return {
                 isSuccess: true,
                 status: ResponseStatus.ok,
@@ -33,10 +34,11 @@ export class ProductsService {
     async getOne(id: string): Promise<ProductsResp> {
         const product: ProductsEntity = await ProductsEntity.findOne(id);
         if (product) {
+            const productRecalculate = this.itemPriceRecalculate(product);
             return {
                 isSuccess: true,
                 status: ResponseStatus.ok,
-                items: [product],
+                items: [productRecalculate],
             }
         } else {
             return {
@@ -52,6 +54,10 @@ export class ProductsService {
         const product = new ProductsEntity();
         Object.assign(product, newProduct);
         product.sold = 0;
+
+        if(product.promotion > 0) product.promotionPrice = Math.floor(product.price * product.promotion / 100);
+        else product.promotionPrice = product.price;
+
         await product.save();
 
         if (product) {
@@ -64,14 +70,21 @@ export class ProductsService {
     }
 
     async priceRecalculate(products): Promise<RecalculateData> {
-        const productPrice = await products.map(item => item.product.price * item.count);
+        const productPrice = await products.map(item => item.product.promotionPrice * item.count);
         const totalPrice = await productPrice.reduce((prev, curr) => prev + curr, 0);
-        await products.forEach(item => item.product.price = item.product.price / 100)
+        await products.forEach(item => item.product = this.itemPriceRecalculate(item.product))
 
         return {
             totalPrice: totalPrice / 100,
             items: products,
         }
+    }
+
+    itemPriceRecalculate(product: ProductsEntity): ProductsEntity {
+        product.price = product.price / 100;
+        product.promotionPrice = product.promotionPrice / 100;
+
+        return product;
     }
 
     async soldUpdate(count: number, product: ProductsEntity) {

@@ -18,4 +18,9 @@ export class newProductDTO {
     @Min(0.01)
     @Max(9999999.99)
     price: number;
+
+    @IsInt()
+    @Min(0)
+    @Max(100)
+    promotion: number;
 }

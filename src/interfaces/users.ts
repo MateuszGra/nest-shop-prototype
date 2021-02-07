@@ -1,5 +1,7 @@
 import { UsersEntity } from "../users/users.entity";
 import { ResponseStatus } from "./response-status";
+import { BasketsEntity } from "../baskets/baskets.entity";
+import { OrdersEntity } from "../orders/orders.entity";
 
 export enum UsersRole {
     user = 'user',
@@ -14,6 +16,8 @@ export interface UserData {
     email: string,
     createdAt: Date,
     role: UsersRole,
+    productsInBasket: BasketsEntity[],
+    orders: OrdersEntity[],
 }
 
 export type UserResp = {

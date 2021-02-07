@@ -1,5 +1,7 @@
 import { ProductsEntity } from "../products/products.entity";
 import { ResponseStatus } from "./response-status";
+import { BaseEntity } from "typeorm";
+import { OrdersItemsEntity } from "../orders/orders-items.entity";
 
 export interface ProductsData {
     name: string,
@@ -7,6 +9,11 @@ export interface ProductsData {
     availability: number,
     description: string,
     price: number,
+    sold: number,
+    promotion: number,
+    promotionPrice: number,
+    basket: BaseEntity[],
+    orders: OrdersItemsEntity[],
 }
 
 export interface RecalculateData {
