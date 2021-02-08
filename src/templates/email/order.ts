@@ -1,7 +1,7 @@
 import { OrderResp } from "../../interfaces/orders";
 
 export function orderEmailTemplate(ordersResp: OrderResp): string {
-    if(ordersResp.isSuccess) {
+    if(ordersResp.success) {
         let ordersTable: string = '';
         ordersResp.orderItems.forEach( order => {
             ordersTable += `

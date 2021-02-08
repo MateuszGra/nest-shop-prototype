@@ -17,14 +17,14 @@ export class UsersService {
         const [users, count]: [UsersEntity[], number] = await UsersEntity.findAndCount();
         if (users.length > 0) {
             return {
-                isSuccess: true,
+                success: true,
                 status: ResponseStatus.ok,
                 count: count,
                 users: users,
             }
         } else {
             return {
-                isSuccess: false,
+                success: false,
                 status: ResponseStatus.ok,
                 errors: ["Empty"],
             }
@@ -35,13 +35,13 @@ export class UsersService {
         const user: UsersEntity = await UsersEntity.findOne(id);
         if (user) {
             return {
-                isSuccess: true,
+                success: true,
                 status: ResponseStatus.ok,
                 users: [user],
             }
         } else {
             return {
-                isSuccess: false,
+                success: false,
                 status: ResponseStatus.notFound,
                 errors: [`User (${id}) not found`],
             }
@@ -54,7 +54,7 @@ export class UsersService {
         })
         if (userExist) {
             return {
-                isSuccess: false,
+                success: false,
                 status: ResponseStatus.notAcceptable,
                 errors: ['E-mail already in the database.']
             }
@@ -73,7 +73,7 @@ export class UsersService {
 
         if (user) {
             return {
-                isSuccess: true,
+                success: true,
                 status: ResponseStatus.ok,
                 id: user.id,
             }
@@ -88,7 +88,7 @@ export class UsersService {
 
         if (guest) {
             return {
-                isSuccess: true,
+                success: true,
                 status: ResponseStatus.ok,
                 id: guest.id,
             }

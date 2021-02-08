@@ -17,14 +17,14 @@ export class ProductsService {
             items.forEach(item => item = this.itemPriceRecalculate(item))
 
             return {
-                isSuccess: true,
+                success: true,
                 status: ResponseStatus.ok,
                 count: count,
                 items: items,
             }
         } else {
             return {
-                isSuccess: false,
+                success: false,
                 status: ResponseStatus.ok,
                 errors: ["Empty"],
             }
@@ -36,13 +36,13 @@ export class ProductsService {
         if (product) {
             const productRecalculate = this.itemPriceRecalculate(product);
             return {
-                isSuccess: true,
+                success: true,
                 status: ResponseStatus.ok,
                 items: [productRecalculate],
             }
         } else {
             return {
-                isSuccess: false,
+                success: false,
                 status: ResponseStatus.notFound,
                 errors: [`Product (${id}) not found`],
             }
@@ -62,7 +62,7 @@ export class ProductsService {
 
         if (product) {
             return {
-                isSuccess: true,
+                success: true,
                 status: ResponseStatus.ok,
                 id: product.id,
             }

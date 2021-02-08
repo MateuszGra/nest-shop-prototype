@@ -30,7 +30,7 @@ export class OrdersService {
         if (order) {
             const orderRecalculate = await this.productsService.priceRecalculate(order.orderItems)
             return {
-                isSuccess: true,
+                success: true,
                 status: ResponseStatus.ok,
                 orderNumber: order.id,
                 count: order.orderItems.length,
@@ -39,7 +39,7 @@ export class OrdersService {
             }
         } else {
             return {
-                isSuccess: false,
+                success: false,
                 status: ResponseStatus.ok,
                 errors: [`Order (${id}) not found`],
             }
@@ -48,13 +48,13 @@ export class OrdersService {
 
     async addOne(userId: string): Promise<OrderResp> {
         const userResp: UserResp = await this.userService.getOne(userId);
-        if (!userResp.isSuccess) return userResp;
+        if (!userResp.success) return userResp;
 
         const basketResp: BasketResp = await this.basketService.getUserBasket(userId);
-        if (!basketResp.isSuccess) return basketResp;
+        if (!basketResp.success) return basketResp;
         if (basketResp.basket.length === 0 ) {
             return {
-                isSuccess: false,
+                success: false,
                 status: ResponseStatus.notFound,
                 errors: ['Basket is empty'],
             }
@@ -86,7 +86,7 @@ export class OrdersService {
         await this.basketService.clearUserBasket(userId);
 
         return {
-            isSuccess: true,
+            success: true,
             status: ResponseStatus.ok,
             orderNumber: order.id,
         }

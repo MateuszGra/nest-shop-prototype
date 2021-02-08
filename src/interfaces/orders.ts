@@ -19,14 +19,14 @@ export interface OrdersItemsData {
 }
 
 export type OrderResp = {
-    isSuccess: true,
+    success: true,
     status: ResponseStatus,
     orderNumber?: string,
     count?: number,
     totalPrice?: number,
     orderItems?: OrdersItemsEntity[],
 } | {
-    isSuccess: false,
+    success: false,
     status: ResponseStatus,
     errors: string[],
 }

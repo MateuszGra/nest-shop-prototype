@@ -22,13 +22,13 @@ export interface RecalculateData {
 }
 
 export type ProductsResp = {
-    isSuccess: true,
+    success: true,
     status: ResponseStatus,
     items?: ProductsEntity[],
     count?: number,
     id?: string,
 } | {
-    isSuccess: false,
+    success: false,
     status: ResponseStatus,
     errors: string[],
 }

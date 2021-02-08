@@ -21,13 +21,13 @@ export interface UserData {
 }
 
 export type UserResp = {
-    isSuccess: true,
+    success: true,
     status: ResponseStatus,
     users?: UsersEntity[],
     count?: number,
     id?: string,
 } | {
-    isSuccess: false,
+    success: false,
     status: ResponseStatus,
     errors: string[],
 }
