@@ -1,4 +1,4 @@
-import {Body, Controller, Inject, Param, Post, Get, Delete, ParseUUIDPipe} from '@nestjs/common';
+import { Body, Controller, Inject, Param, Post, Get, Delete, ParseUUIDPipe } from '@nestjs/common';
 import { AddToBasketDTO } from "./dto/add-to-basket";
 import { BasketsService } from "./baskets.service";
 import { BasketResp } from "../interfaces/basket";
