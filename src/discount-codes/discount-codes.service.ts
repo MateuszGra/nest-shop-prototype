@@ -21,4 +21,23 @@ export class DiscountCodesService {
             }
         }
     }
+
+    async deleteOne(id: string): Promise<DiscountCodesResp> {
+        const deleteResult = await DiscountCodesEntity.delete(id);
+        console.log(deleteResult)
+
+        if (deleteResult.affected === 0) {
+            return {
+                success: false,
+                status: ResponseStatus.notFound,
+                errors: [`Discount-code (${id}) not found`],
+            }
+        }
+
+        return {
+            success: true,
+            status: ResponseStatus.ok,
+        }
+
+    }
 }
