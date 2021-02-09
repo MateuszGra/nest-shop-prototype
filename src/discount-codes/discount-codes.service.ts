@@ -22,6 +22,26 @@ export class DiscountCodesService {
         }
     }
 
+    async getOne(codeNumber: string): Promise<DiscountCodesResp> {
+        codeNumber = codeNumber.toUpperCase();
+        const code = await DiscountCodesEntity.findOne({
+            where:{ code: codeNumber }
+        });
+        if (!code) {
+            return {
+                success: false,
+                status: ResponseStatus.notFound,
+                errors: [`Discount-code (${codeNumber}) not found`],
+            }
+        }
+
+        return {
+            success: true,
+            status: ResponseStatus.ok,
+            codes: [code]
+        }
+    }
+
     async deleteOne(id: string): Promise<DiscountCodesResp> {
         const deleteResult = await DiscountCodesEntity.delete(id);
         console.log(deleteResult)
