@@ -13,12 +13,12 @@ export class DiscountCodesEntity extends BaseEntity implements DiscountCodesData
     code: string;
 
     @Column({
-        type: "date"
+        type: "datetime"
     })
     startDate: Date;
 
     @Column({
-        type: "date"
+        type: "datetime"
     })
     endDate: Date;
 

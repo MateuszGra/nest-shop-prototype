@@ -15,6 +15,7 @@ export type DiscountCodesResp = {
     status: ResponseStatus,
     codes?: DiscountCodesEntity[],
     id?: string,
+    upToDate?: boolean,
 } | {
     success: false,
     status: ResponseStatus,

@@ -22,10 +22,17 @@ export class DiscountCodesService {
         }
     }
 
+     validationCode(code: DiscountCodesEntity): boolean {
+        const date = new Date();
+        if (code.startDate <= date && isNaN(code.endDate.getTime())) return true;
+        else if (code.startDate <= date && code.endDate >= date) return true;
+        else return false;
+    }
+
     async getOne(codeNumber: string): Promise<DiscountCodesResp> {
         codeNumber = codeNumber.toUpperCase();
         const code = await DiscountCodesEntity.findOne({
-            where:{ code: codeNumber }
+            where: { code: codeNumber }
         });
         if (!code) {
             return {
@@ -38,6 +45,7 @@ export class DiscountCodesService {
         return {
             success: true,
             status: ResponseStatus.ok,
+            upToDate: this.validationCode(code),
             codes: [code]
         }
     }
