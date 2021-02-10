@@ -34,7 +34,7 @@ export class DiscountCodesService {
 
      validationCode(code: DiscountCodesEntity): boolean {
         const date = new Date();
-        if(code.available === true) {
+        if (code.available === true) {
             if (code.startDate <= date && isNaN(code.endDate.getTime())) return true;
             else if (code.startDate <= date && code.endDate >= date) return true;
         }
@@ -82,7 +82,7 @@ export class DiscountCodesService {
     }
 
     async switchAvailableToFalse(code: DiscountCodesEntity) {
-        if(code.oneTime) {
+        if (code.oneTime) {
             await DiscountCodesEntity.update(code.id, {
                 available: false
             })

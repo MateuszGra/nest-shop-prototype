@@ -1,5 +1,6 @@
-import { BaseEntity, Column, Entity, Index, PrimaryGeneratedColumn } from "typeorm";
+import {BaseEntity, Column, Entity, Index, OneToMany, PrimaryGeneratedColumn} from "typeorm";
 import { DiscountCodesData } from "../interfaces/discount-codes";
+import { UsersEntity } from "../users/users.entity";
 
 @Entity()
 export class DiscountCodesEntity extends BaseEntity implements DiscountCodesData  {
@@ -39,4 +40,7 @@ export class DiscountCodesEntity extends BaseEntity implements DiscountCodesData
         default: () => true,
     })
     available: boolean;
+
+    @OneToMany(type => UsersEntity, entity => entity.discountCode)
+    users: UsersEntity[];
 }

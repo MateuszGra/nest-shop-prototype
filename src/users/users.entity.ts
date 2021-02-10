@@ -1,7 +1,8 @@
-import { BaseEntity, Column, Entity, Index, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import {BaseEntity, Column, Entity, Index, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn} from "typeorm";
 import { UserData, UsersRole }  from "../interfaces/users";
 import { BasketsEntity } from "../baskets/baskets.entity";
 import { OrdersEntity } from "../orders/orders.entity";
+import { DiscountCodesEntity } from "../discount-codes/discount-codes.entity";
 
 @Entity()
 export class UsersEntity extends BaseEntity implements UserData {
@@ -37,4 +38,8 @@ export class UsersEntity extends BaseEntity implements UserData {
 
     @OneToMany(type => OrdersEntity, entity => entity.user)
     orders: OrdersEntity[];
+
+    @ManyToOne(type => DiscountCodesEntity, entity => entity.users)
+    @JoinColumn()
+    discountCode: DiscountCodesEntity;
 }
