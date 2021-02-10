@@ -34,7 +34,7 @@ export class UsersController {
         return await this.usersService.registerUser(newUser);
     }
 
-    @Post('register-guest')
+    @Post('/register-guest')
     async registerGuest(): Promise<UserResp> {
         return await this.usersService.registerGuest();
     }
