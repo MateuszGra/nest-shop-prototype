@@ -81,7 +81,7 @@ export class DiscountCodesService {
 
     }
 
-    async switchAvailableToFalse(code: DiscountCodesEntity): Promise<DiscountCodesResp> {
+    async switchAvailableToFalse(code: DiscountCodesEntity) {
         if(code.oneTime) {
             await DiscountCodesEntity.update(code.id, {
                 available: false
