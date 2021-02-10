@@ -5,11 +5,15 @@ import { ResponseStatus } from "../interfaces/response-status";
 import { registerUserDTO } from "./dto/register-user";
 import { MailService } from "../mail/mail.service";
 import { registerEmailTemplate } from "../templates/email/register";
+import { addDiscountCodeDTO } from "./dto/add-discount-code";
+import { DiscountCodesService } from "../discount-codes/discount-codes.service";
+import { DiscountCodesResp } from "../interfaces/discount-codes";
 
 @Injectable()
 export class UsersService {
     constructor(
         @Inject(MailService) private mailService: MailService,
+        @Inject(DiscountCodesService) private discountCodesService: DiscountCodesService,
     ) {
     }
 
@@ -32,7 +36,9 @@ export class UsersService {
     }
 
     async getOne(id: string): Promise<UserResp> {
-        const user: UsersEntity = await UsersEntity.findOne(id);
+        const user: UsersEntity = await UsersEntity.findOne(id, {
+            relations: ['discountCode'],
+        });
         if (user) {
             return {
                 success: true,
@@ -94,5 +100,34 @@ export class UsersService {
             }
         }
 
+    }
+
+    async addDiscountCode(discountCode: addDiscountCodeDTO): Promise<UserResp> {
+        const userResp = await this.getOne(discountCode.userId);
+        if (!userResp.success) return userResp;
+
+        const codeResp: DiscountCodesResp = await this.discountCodesService.getOne(discountCode.code);
+        if (!codeResp.success) return codeResp;
+
+        if (!codeResp.upToDate) {
+            return {
+                success: false,
+                status: ResponseStatus.notAcceptable,
+                errors: ['Code is not up to date.'],
+            }
+        }
+
+        if (userResp.users[0].discountCode) {
+            const comparisonCode: DiscountCodesResp = this.discountCodesService.comparison(codeResp.codes[0], userResp.users[0].discountCode);
+            if (!comparisonCode.success) return comparisonCode
+        }
+
+        await UsersEntity.update(userResp.users[0].id, {
+            discountCode: codeResp.codes[0],
+        })
+        return {
+            success: true,
+            status: ResponseStatus.ok
+        }
     }
 }

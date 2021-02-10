@@ -88,4 +88,20 @@ export class DiscountCodesService {
             })
         }
     }
+
+    comparison(newCode: DiscountCodesEntity, oldCode: DiscountCodesEntity): DiscountCodesResp {
+        const oldCodeAavailable = this.validationCode(oldCode);
+        if (oldCode.promotion > newCode.promotion && oldCodeAavailable) {
+            return {
+                success: false,
+                status: ResponseStatus.notAcceptable,
+                errors: ['Current code has more value']
+            }
+        } else {
+            return {
+                success: true,
+                status: ResponseStatus.ok
+            }
+        }
+    }
 }

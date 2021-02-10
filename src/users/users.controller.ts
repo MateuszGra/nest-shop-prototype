@@ -1,9 +1,10 @@
-import {Body, Controller, Get, Inject, Param, ParseUUIDPipe, Post, UseInterceptors} from '@nestjs/common';
+import { Body, Controller, Get, Inject, Param, ParseUUIDPipe, Post, UseInterceptors } from '@nestjs/common';
 import { UsersService } from "./users.service";
 import { UserResp } from "../interfaces/users";
 import { registerUserDTO } from "./dto/register-user";
-import {CacheInterceptor} from "../interceptors/cache.interceptor";
-import {CacheTime} from "../decorators/cache-time.decorator";
+import { CacheInterceptor } from "../interceptors/cache.interceptor";
+import { CacheTime } from "../decorators/cache-time.decorator";
+import { addDiscountCodeDTO } from "./dto/add-discount-code";
 
 @Controller('users')
 export class UsersController {
@@ -37,5 +38,12 @@ export class UsersController {
     @Post('/register-guest')
     async registerGuest(): Promise<UserResp> {
         return await this.usersService.registerGuest();
+    }
+
+    @Post('/add-discount-code/')
+    async addDiscountCode(
+        @Body() discountCode: addDiscountCodeDTO,
+    ): Promise<UserResp> {
+        return await this.usersService.addDiscountCode(discountCode)
     }
 }
