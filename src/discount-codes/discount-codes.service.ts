@@ -3,10 +3,20 @@ import { newDiscountCodeDTO } from "./dto/new-discount-code";
 import { DiscountCodesResp } from "../interfaces/discount-codes";
 import { DiscountCodesEntity } from "./discount-codes.entity";
 import { ResponseStatus } from "../interfaces/response-status";
+import { Equal } from "typeorm";
 
 @Injectable()
 export class DiscountCodesService {
     async addOne(newCode: newDiscountCodeDTO): Promise<DiscountCodesResp> {
+        const findCode = await this.getOne(newCode.code)
+        if (findCode.success) {
+            return {
+                success: false,
+                status: ResponseStatus.notAcceptable,
+                errors: ['Code already in the database.']
+            }
+        }
+
         const code = new DiscountCodesEntity();
         newCode.code = newCode.code.toUpperCase();
         if (!newCode.startDate)  newCode.startDate = new Date();
@@ -24,15 +34,17 @@ export class DiscountCodesService {
 
      validationCode(code: DiscountCodesEntity): boolean {
         const date = new Date();
-        if (code.startDate <= date && isNaN(code.endDate.getTime())) return true;
-        else if (code.startDate <= date && code.endDate >= date) return true;
-        else return false;
+        if(code.available === true) {
+            if (code.startDate <= date && isNaN(code.endDate.getTime())) return true;
+            else if (code.startDate <= date && code.endDate >= date) return true;
+        }
+        return false;
     }
 
     async getOne(codeNumber: string): Promise<DiscountCodesResp> {
         codeNumber = codeNumber.toUpperCase();
         const code = await DiscountCodesEntity.findOne({
-            where: { code: codeNumber }
+            where: { code: Equal(codeNumber) }
         });
         if (!code) {
             return {

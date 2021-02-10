@@ -34,4 +34,9 @@ export class DiscountCodesEntity extends BaseEntity implements DiscountCodesData
     })
     promotion: number;
 
+    @Column({
+        type: "boolean",
+        default: () => true,
+    })
+    available: boolean;
 }
