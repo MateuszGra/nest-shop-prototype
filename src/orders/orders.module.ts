@@ -5,6 +5,7 @@ import { UsersModule } from "../users/users.module";
 import { BasketsModule } from "../baskets/baskets.module";
 import { MailModule } from "../mail/mail.module";
 import { ProductsModule } from "../products/products.module";
+import { DiscountCodesModule } from "../discount-codes/discount-codes.module";
 
 @Module({
   imports: [
@@ -12,6 +13,7 @@ import { ProductsModule } from "../products/products.module";
     forwardRef(() => UsersModule),
     forwardRef(() => BasketsModule),
     forwardRef(() => MailModule),
+    forwardRef(() => DiscountCodesModule),
   ],
   controllers: [OrdersController],
   providers: [OrdersService]

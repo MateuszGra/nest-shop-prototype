@@ -10,6 +10,7 @@ import { MailService } from "../mail/mail.service";
 import { orderEmailTemplate } from "../templates/email/order";
 import { OrdersItemsEntity } from "./orders-items.entity";
 import { ProductsService } from "../products/products.service";
+import { DiscountCodesService } from "../discount-codes/discount-codes.service";
 
 @Injectable()
 export class OrdersService {
@@ -18,6 +19,7 @@ export class OrdersService {
         @Inject(UsersService) private userService: UsersService,
         @Inject(BasketsService) private basketService: BasketsService,
         @Inject(MailService) private mailService: MailService,
+        @Inject(DiscountCodesService) private discountCodesService: DiscountCodesService,
     ) {
     }
 
@@ -91,6 +93,9 @@ export class OrdersService {
             orderEmailTemplate(await this.getOneByOrderNumber(order.id))
         )
 
+        if (userResp.users[0].discountCode !== null && userResp.users[0].discountCode.oneTime) {
+            await this.discountCodesService.switchAvailableToFalse(userResp.users[0].discountCode);
+        }
         await this.basketService.clearUserBasket(userId);
 
         return {
