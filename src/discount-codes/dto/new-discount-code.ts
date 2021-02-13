@@ -21,4 +21,8 @@ export class newDiscountCodeDTO {
     @IsBoolean()
     @IsOptional()
     oneTime: boolean
+
+    @IsBoolean()
+    @IsOptional()
+    available: boolean;
 }
