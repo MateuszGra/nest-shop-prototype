@@ -14,6 +14,31 @@ export class OrdersItemsEntity extends BaseEntity implements OrdersItemsData {
     })
     count: number;
 
+    @Column({
+        type: 'float',
+        precision: 13,
+        scale: 2,
+    })
+    totalPrice: number;
+
+    @Column({
+        type: "int",
+        precision: 3,
+    })
+    promotion: number
+
+    @Column({
+        type: 'float',
+        scale: 2,
+    })
+    price: number
+
+    @Column({
+        type: 'float',
+        scale: 2,
+    })
+    promotionPrice: number;
+
     @ManyToOne( type => ProductsEntity, entity => entity.orders )
     @JoinColumn()
     product: ProductsEntity;

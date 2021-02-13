@@ -27,8 +27,8 @@ export class BasketsService {
             relations: ['product'],
             where: { user: userId }
         });
-        const userDiscountCode = userResp.users[0].discountCode ? userResp.users[0].discountCode.code : null;
 
+        const userDiscountCode = userResp.users[0].discountCode ? userResp.users[0].discountCode.code : null;
         const basketRecalculate = await this.productsService.priceRecalculate(basket, userDiscountCode);
 
         return {
@@ -106,7 +106,7 @@ export class BasketsService {
 
         const basket = BasketsEntity.create({
             count: newBasket.count,
-            totalPrice: product.promotionPrice * newBasket.count / 100,
+            totalPrice: product.promotionPrice * newBasket.count,
             user: user,
             product: product,
         });

@@ -28,13 +28,14 @@ export class OrdersService {
         })
 
         if (order) {
-            const orderRecalculate = await this.productsService.priceRecalculate(order.orderItems)
             return {
                 success: true,
                 status: ResponseStatus.ok,
                 orderNumber: order.id,
                 count: order.orderItems.length,
-                totalPrice: orderRecalculate.totalPrice,
+                totalPrice: order.totalPrice,
+                promotionPrice: order.promotionPrice,
+                discount: order.discount,
                 orderItems: order.orderItems,
             }
         } else {
@@ -62,6 +63,9 @@ export class OrdersService {
 
         const order: OrdersEntity = OrdersEntity.create({
             user: userResp.users[0],
+            totalPrice: basketResp.totalPrice,
+            promotionPrice: basketResp.promotionPrice,
+            discount: basketResp.discount,
         })
         await order.save();
 
@@ -69,7 +73,11 @@ export class OrdersService {
             if (basket.count > 0) {
                 const orderItem = OrdersItemsEntity.create({
                     count: basket.count,
+                    totalPrice: basket.totalPrice,
+                    promotion: basket.product.promotion,
+                    price: basket.product.price,
                     product: basket.product,
+                    promotionPrice: basket.product.promotionPrice,
                     order: order,
                 });
                 await orderItem.save();
