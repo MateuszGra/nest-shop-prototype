@@ -4,6 +4,7 @@ import { ProductsResp, RecalculateData } from "../interfaces/products";
 import { ResponseStatus } from "../interfaces/response-status";
 import { newProductDTO } from "./dto/new-product";
 import { DiscountCodesService } from "../discount-codes/discount-codes.service";
+import {BasketsEntity} from "../baskets/baskets.entity";
 
 @Injectable()
 export class ProductsService {
@@ -75,7 +76,7 @@ export class ProductsService {
         }
     }
 
-    async priceRecalculate(products, discountCodeNumber?: string): Promise<RecalculateData> {
+    async priceRecalculate(products: BasketsEntity[], discountCodeNumber?: string): Promise<RecalculateData> {
         const productPrice = await products.map(item => item.product.promotionPrice * item.count);
         const totalPrice = await productPrice.reduce((prev, curr) => prev + curr, 0);
         await products.forEach(item => item.product = this.itemPriceRecalculate(item.product))

@@ -2,6 +2,7 @@ import { ProductsEntity } from "../products/products.entity";
 import { ResponseStatus } from "./response-status";
 import { BaseEntity } from "typeorm";
 import { OrdersItemsEntity } from "../orders/orders-items.entity";
+import {BasketsEntity} from "../baskets/baskets.entity";
 
 export interface ProductsData {
     name: string,
@@ -20,7 +21,7 @@ export interface RecalculateData {
     totalPrice: number,
     promotionPrice: number,
     discount: number,
-    items: [],
+    items: BasketsEntity[],
 }
 
 export type ProductsResp = {
