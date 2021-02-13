@@ -27,14 +27,17 @@ export class BasketsService {
             relations: ['product'],
             where: { user: userId }
         });
+        const userDiscountCode = userResp.users[0].discountCode ? userResp.users[0].discountCode.code : null;
 
-        const basketRecalculate = await this.productsService.priceRecalculate(basket);
+        const basketRecalculate = await this.productsService.priceRecalculate(basket, userDiscountCode);
 
         return {
             success: true,
             status: ResponseStatus.ok,
             count: count,
             totalPrice: basketRecalculate.totalPrice,
+            promotionPrice: basketRecalculate.promotionPrice,
+            discount: basketRecalculate.discount,
             basket: basketRecalculate.items,
         }
     }
@@ -83,6 +86,7 @@ export class BasketsService {
 
         const basket = await BasketsEntity.update(basketExists.id, {
             count: newBasket.count,
+            totalPrice: basketExists.product.promotionPrice * newBasket.count / 100,
             createdAt: new Date(),
         })
 
@@ -98,12 +102,11 @@ export class BasketsService {
     async createBasket(newBasket: AddToBasketDTO, user: UsersEntity, product: ProductsEntity): Promise<BasketResp> {
         if (newBasket.count === undefined) newBasket.count = 1;
         const availabilityResp = await this.availability(newBasket.count, product);
-        console.log('create1')
         if (!availabilityResp.success) return availabilityResp;
-        console.log('create2')
 
         const basket = BasketsEntity.create({
             count: newBasket.count,
+            totalPrice: product.promotionPrice * newBasket.count / 100,
             user: user,
             product: product,
         });

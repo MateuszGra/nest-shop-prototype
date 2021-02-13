@@ -20,6 +20,13 @@ export class BasketsEntity extends BaseEntity implements BasketData {
     })
     createdAt: Date;
 
+    @Column({
+        type: 'float',
+        precision: 13,
+        scale: 2,
+    })
+    totalPrice: number;
+
     @ManyToOne( type => ProductsEntity, entity => entity.basket )
     @JoinColumn()
     product: ProductsEntity;

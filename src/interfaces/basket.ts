@@ -8,6 +8,7 @@ export interface BasketData {
     user: UsersEntity,
     product: ProductsEntity,
     count: number,
+    totalPrice: number,
     createdAt: Date,
 }
 
@@ -17,6 +18,8 @@ export type BasketResp = {
     basket?: BasketsEntity[],
     count?: number,
     totalPrice?: number,
+    promotionPrice?: number,
+    discount?: number,
     id?: string,
 } | {
     success: false,

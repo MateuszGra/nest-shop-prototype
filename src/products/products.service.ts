@@ -1,11 +1,17 @@
-import { Injectable } from '@nestjs/common';
+import {Inject, Injectable} from '@nestjs/common';
 import { ProductsEntity } from "./products.entity";
 import { ProductsResp, RecalculateData } from "../interfaces/products";
 import { ResponseStatus } from "../interfaces/response-status";
 import { newProductDTO } from "./dto/new-product";
+import { DiscountCodesService } from "../discount-codes/discount-codes.service";
 
 @Injectable()
 export class ProductsService {
+    constructor(
+        @Inject(DiscountCodesService) private discountCodesService: DiscountCodesService,
+    ) {
+    }
+
     async getAll(): Promise<ProductsResp> {
         const [items, count]: [ProductsEntity[], number] = await ProductsEntity.findAndCount({
             order: {
@@ -69,13 +75,26 @@ export class ProductsService {
         }
     }
 
-    async priceRecalculate(products): Promise<RecalculateData> {
+    async priceRecalculate(products, discountCodeNumber?: string): Promise<RecalculateData> {
         const productPrice = await products.map(item => item.product.promotionPrice * item.count);
         const totalPrice = await productPrice.reduce((prev, curr) => prev + curr, 0);
         await products.forEach(item => item.product = this.itemPriceRecalculate(item.product))
+        let promotionalPrice = totalPrice;
+        let discount = 0;
+
+        if (discountCodeNumber) {
+            const discountCodeResp = await this.discountCodesService.getOne(discountCodeNumber);
+            if (discountCodeResp.success && discountCodeResp.upToDate) {
+                discount = discountCodeResp.codes[0].promotion;
+                promotionalPrice = Math.floor(totalPrice - (totalPrice * discount / 100));
+            }
+
+        }
 
         return {
             totalPrice: totalPrice / 100,
+            promotionPrice: promotionalPrice / 100,
+            discount: discount,
             items: products,
         }
     }

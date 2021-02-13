@@ -18,6 +18,8 @@ export interface ProductsData {
 
 export interface RecalculateData {
     totalPrice: number,
+    promotionPrice: number,
+    discount: number,
     items: [],
 }
 
