@@ -1,9 +1,10 @@
-import { Injectable } from '@nestjs/common';
-import { newDiscountCodeDTO } from "./dto/new-discount-code";
-import { DiscountCodesResp } from "../interfaces/discount-codes";
-import { DiscountCodesEntity } from "./discount-codes.entity";
-import { ResponseStatus } from "../interfaces/response-status";
-import { Equal } from "typeorm";
+import {Injectable} from '@nestjs/common';
+import {newDiscountCodeDTO} from "./dto/new-discount-code";
+import {DiscountCodesResp} from "../interfaces/discount-codes";
+import {DiscountCodesEntity} from "./discount-codes.entity";
+import {ResponseStatus} from "../interfaces/response-status";
+import {Equal} from "typeorm";
+import {editDiscountCodeDTO} from "./dto/edit-discount-code";
 
 @Injectable()
 export class DiscountCodesService {
@@ -64,7 +65,6 @@ export class DiscountCodesService {
 
     async deleteOne(id: string): Promise<DiscountCodesResp> {
         const deleteResult = await DiscountCodesEntity.delete(id);
-        console.log(deleteResult)
 
         if (deleteResult.affected === 0) {
             return {
@@ -102,6 +102,22 @@ export class DiscountCodesService {
                 success: true,
                 status: ResponseStatus.ok
             }
+        }
+    }
+
+    async editOne(editCode: editDiscountCodeDTO, id: string): Promise<DiscountCodesResp> {
+        const UpdateResult = await DiscountCodesEntity.update(id, editCode);
+        if (UpdateResult.affected === 0) {
+            return {
+                success: false,
+                status: ResponseStatus.notFound,
+                errors: [`Discount-code (${id}) not found`],
+            }
+        }
+
+        return {
+            success: true,
+            status: ResponseStatus.ok,
         }
     }
 }
