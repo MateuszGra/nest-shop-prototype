@@ -1,10 +1,11 @@
-import { Body, Controller, Get, Inject, Param, ParseUUIDPipe, Post, UseInterceptors } from '@nestjs/common';
+import {Body, Controller, Get, Inject, Param, ParseUUIDPipe, Post, Put, UseInterceptors} from '@nestjs/common';
 import { UsersService } from "./users.service";
 import { UserResp } from "../interfaces/users";
 import { RegisterUserDTO } from "./dto/register-user";
 import { CacheInterceptor } from "../interceptors/cache.interceptor";
 import { CacheTime } from "../decorators/cache-time.decorator";
 import { AddDiscountCodeDTO } from "./dto/add-discount-code";
+import {EditUserDTO} from "./dto/edit-user";
 
 @Controller('users')
 export class UsersController {
@@ -26,6 +27,14 @@ export class UsersController {
         @Param('id', ParseUUIDPipe) id: string,
     ): Promise<UserResp> {
         return await this.usersService.getOne(id);
+    }
+
+    @Put('/:id')
+    async editOne(
+        @Body() editUser: EditUserDTO,
+        @Param('id', ParseUUIDPipe) id: string,
+    ): Promise<UserResp> {
+        return  await  this.usersService.editOne(editUser, id)
     }
 
     @Post('/register-user')

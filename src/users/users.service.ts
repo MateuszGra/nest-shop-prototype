@@ -8,6 +8,7 @@ import { registerEmailTemplate } from "../templates/email/register";
 import { AddDiscountCodeDTO } from "./dto/add-discount-code";
 import { DiscountCodesService } from "../discount-codes/discount-codes.service";
 import { DiscountCodesResp } from "../interfaces/discount-codes";
+import { EditUserDTO } from "./dto/edit-user";
 
 @Injectable()
 export class UsersService {
@@ -128,6 +129,22 @@ export class UsersService {
         return {
             success: true,
             status: ResponseStatus.ok
+        }
+    }
+
+    async editOne(editUser: EditUserDTO, id: string): Promise<UserResp> {
+        const UpdateResult = await UsersEntity.update(id, editUser);
+        if (UpdateResult.affected === 0) {
+            return {
+                success: false,
+                status: ResponseStatus.notFound,
+                errors: [`User (${id}) not found`],
+            }
+        }
+
+        return {
+            success: true,
+            status: ResponseStatus.ok,
         }
     }
 }
