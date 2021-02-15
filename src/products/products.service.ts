@@ -17,7 +17,7 @@ export class ProductsService {
     async getAll(page: number = 1, category: string, filter: ProductFilters, order: ProductOrder): Promise<ProductsResp> {
         const maxPerPage = 3;
         const orders = {};
-        if(order && filter) orders[filter] = order;
+        if(order && filter) orders[filter] = order.toUpperCase();
         else orders['promotion'] = ProductOrder.asc;
 
         const where = {}
