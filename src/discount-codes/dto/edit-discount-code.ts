@@ -1,6 +1,6 @@
 import { IsBoolean, IsDate, IsInt, IsOptional, IsString, Length, Max, Min } from "class-validator";
 
-export class editDiscountCodeDTO {
+export class EditDiscountCodeDTO {
     @IsString()
     @IsOptional()
     @Length(2, 100)

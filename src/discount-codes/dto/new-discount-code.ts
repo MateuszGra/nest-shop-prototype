@@ -1,6 +1,6 @@
 import { IsBoolean, IsDate, IsInt, IsOptional, IsString, Length, Max, Min } from "class-validator";
 
-export class newDiscountCodeDTO {
+export class NewDiscountCodeDTO {
     @IsString()
     @Length(2, 100)
     code: string;

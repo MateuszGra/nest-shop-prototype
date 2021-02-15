@@ -1,6 +1,6 @@
-import {IsString, IsUUID, Length} from "class-validator";
+import { IsString, IsUUID, Length } from "class-validator";
 
-export class addDiscountCodeDTO {
+export class AddDiscountCodeDTO {
     @IsUUID()
     userId: string;
 

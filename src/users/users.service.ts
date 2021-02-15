@@ -2,10 +2,10 @@ import { Inject, Injectable } from '@nestjs/common';
 import { UsersEntity } from "./users.entity";
 import { UserResp, UsersRole } from "../interfaces/users";
 import { ResponseStatus } from "../interfaces/response-status";
-import { registerUserDTO } from "./dto/register-user";
+import { RegisterUserDTO } from "./dto/register-user";
 import { MailService } from "../mail/mail.service";
 import { registerEmailTemplate } from "../templates/email/register";
-import { addDiscountCodeDTO } from "./dto/add-discount-code";
+import { AddDiscountCodeDTO } from "./dto/add-discount-code";
 import { DiscountCodesService } from "../discount-codes/discount-codes.service";
 import { DiscountCodesResp } from "../interfaces/discount-codes";
 
@@ -54,7 +54,7 @@ export class UsersService {
         }
     }
 
-    async registerUser(newUser: registerUserDTO): Promise<UserResp> {
+    async registerUser(newUser: RegisterUserDTO): Promise<UserResp> {
         const userExist = await UsersEntity.findOne({
             email: newUser.email,
         })
@@ -102,7 +102,7 @@ export class UsersService {
 
     }
 
-    async addDiscountCode(discountCode: addDiscountCodeDTO): Promise<UserResp> {
+    async addDiscountCode(discountCode: AddDiscountCodeDTO): Promise<UserResp> {
         const userResp = await this.getOne(discountCode.userId);
         if (!userResp.success) return userResp;
 

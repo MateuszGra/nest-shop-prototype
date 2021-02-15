@@ -2,7 +2,7 @@ import { Get, Post, Inject, Body, Param, UseInterceptors } from '@nestjs/common'
 import { Controller } from '@nestjs/common';
 import { ProductsService } from "./products.service";
 import { ProductsResp } from "../interfaces/products";
-import { newProductDTO } from "./dto/new-product";
+import { NewProductDTO } from "./dto/new-product";
 import { CacheInterceptor } from "../interceptors/cache.interceptor";
 import { CacheTime } from "../decorators/cache-time.decorator";
 
@@ -30,7 +30,7 @@ export class ProductsController {
 
     @Post('/')
     async addNew(
-        @Body() newProduct: newProductDTO,
+        @Body() newProduct: NewProductDTO,
     ): Promise<ProductsResp> {
         return await this.productsService.addOne(newProduct);
     }

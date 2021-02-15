@@ -1,14 +1,14 @@
 import {Injectable} from '@nestjs/common';
-import {newDiscountCodeDTO} from "./dto/new-discount-code";
+import {NewDiscountCodeDTO} from "./dto/new-discount-code";
 import {DiscountCodesResp} from "../interfaces/discount-codes";
 import {DiscountCodesEntity} from "./discount-codes.entity";
 import {ResponseStatus} from "../interfaces/response-status";
 import {Equal} from "typeorm";
-import {editDiscountCodeDTO} from "./dto/edit-discount-code";
+import {EditDiscountCodeDTO} from "./dto/edit-discount-code";
 
 @Injectable()
 export class DiscountCodesService {
-    async addOne(newCode: newDiscountCodeDTO): Promise<DiscountCodesResp> {
+    async addOne(newCode: NewDiscountCodeDTO): Promise<DiscountCodesResp> {
         const findCode = await this.getOne(newCode.code)
         if (findCode.success) {
             return {
@@ -105,7 +105,7 @@ export class DiscountCodesService {
         }
     }
 
-    async editOne(editCode: editDiscountCodeDTO, id: string): Promise<DiscountCodesResp> {
+    async editOne(editCode: EditDiscountCodeDTO, id: string): Promise<DiscountCodesResp> {
         const UpdateResult = await DiscountCodesEntity.update(id, editCode);
         if (UpdateResult.affected === 0) {
             return {

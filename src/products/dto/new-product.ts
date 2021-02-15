@@ -1,6 +1,6 @@
 import { IsInt, IsNumber, IsString, Length, Max, Min } from "class-validator";
 
-export class newProductDTO {
+export class NewProductDTO {
     @IsString()
     @Length(2, 300)
     name: string;

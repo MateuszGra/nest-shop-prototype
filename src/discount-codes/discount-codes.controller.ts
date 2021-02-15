@@ -1,8 +1,8 @@
 import {Body, Controller, Delete, Get, Inject, Param, ParseUUIDPipe, Post, Put} from '@nestjs/common';
 import { DiscountCodesService } from "./discount-codes.service";
-import { newDiscountCodeDTO } from "./dto/new-discount-code";
+import { NewDiscountCodeDTO } from "./dto/new-discount-code";
 import { DiscountCodesResp } from "../interfaces/discount-codes";
-import {editDiscountCodeDTO} from "./dto/edit-discount-code";
+import {EditDiscountCodeDTO} from "./dto/edit-discount-code";
 
 @Controller('discount-codes')
 export class DiscountCodesController {
@@ -14,7 +14,7 @@ export class DiscountCodesController {
 
     @Post('/')
     async addNew(
-        @Body() newCode: newDiscountCodeDTO,
+        @Body() newCode: NewDiscountCodeDTO,
     ): Promise<DiscountCodesResp> {
         return await this.discountCodesService.addOne(newCode);
     }
@@ -35,7 +35,7 @@ export class DiscountCodesController {
 
     @Put('/:id')
     async edit (
-        @Body() editCode: editDiscountCodeDTO,
+        @Body() editCode: EditDiscountCodeDTO,
         @Param('id', ParseUUIDPipe) id: string,
     ): Promise<DiscountCodesResp> {
         return await this.discountCodesService.editOne(editCode, id);

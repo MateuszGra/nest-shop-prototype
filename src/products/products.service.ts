@@ -2,7 +2,7 @@ import {Inject, Injectable} from '@nestjs/common';
 import { ProductsEntity } from "./products.entity";
 import { ProductsResp, RecalculateData } from "../interfaces/products";
 import { ResponseStatus } from "../interfaces/response-status";
-import { newProductDTO } from "./dto/new-product";
+import { NewProductDTO } from "./dto/new-product";
 import { DiscountCodesService } from "../discount-codes/discount-codes.service";
 import {BasketsEntity} from "../baskets/baskets.entity";
 
@@ -56,7 +56,7 @@ export class ProductsService {
         }
     }
 
-    async addOne(newProduct: newProductDTO): Promise<ProductsResp> {
+    async addOne(newProduct: NewProductDTO): Promise<ProductsResp> {
         newProduct.price = newProduct.price * 100;
         const product = new ProductsEntity();
         Object.assign(product, newProduct);
