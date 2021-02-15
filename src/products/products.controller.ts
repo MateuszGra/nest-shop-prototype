@@ -1,10 +1,11 @@
-import { Get, Post, Inject, Body, Param, UseInterceptors } from '@nestjs/common';
+import {Get, Post, Inject, Body, Param, UseInterceptors, Put, ParseUUIDPipe} from '@nestjs/common';
 import { Controller } from '@nestjs/common';
 import { ProductsService } from "./products.service";
 import { ProductsResp } from "../interfaces/products";
 import { NewProductDTO } from "./dto/new-product";
 import { CacheInterceptor } from "../interceptors/cache.interceptor";
 import { CacheTime } from "../decorators/cache-time.decorator";
+import {EditProductsDTO} from "./dto/edit-products";
 
 @Controller('products')
 export class ProductsController {
@@ -33,5 +34,13 @@ export class ProductsController {
         @Body() newProduct: NewProductDTO,
     ): Promise<ProductsResp> {
         return await this.productsService.addOne(newProduct);
+    }
+
+    @Put('/:id')
+    async edit (
+        @Body() editProduct: EditProductsDTO,
+        @Param('id', ParseUUIDPipe) id: string,
+    ): Promise<ProductsResp> {
+        return await this.productsService.editOne(editProduct, id);
     }
 }

@@ -5,6 +5,7 @@ import { ResponseStatus } from "../interfaces/response-status";
 import { NewProductDTO } from "./dto/new-product";
 import { DiscountCodesService } from "../discount-codes/discount-codes.service";
 import {BasketsEntity} from "../baskets/baskets.entity";
+import {EditProductsDTO} from "./dto/edit-products";
 
 @Injectable()
 export class ProductsService {
@@ -112,5 +113,21 @@ export class ProductsService {
             availability: product.availability - count,
             sold: product.sold + count,
        })
+    }
+
+    async editOne(editProduct: EditProductsDTO, id: string): Promise<ProductsResp> {
+        const UpdateResult = await ProductsEntity.update(id, editProduct);
+        if (UpdateResult.affected === 0) {
+            return {
+                success: false,
+                status: ResponseStatus.notFound,
+                errors: [`Product (${id}) not found`],
+            }
+        }
+
+        return {
+            success: true,
+            status: ResponseStatus.ok,
+        }
     }
 }
