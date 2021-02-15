@@ -1,11 +1,11 @@
 import {Inject, Injectable} from '@nestjs/common';
 import { ProductsEntity } from "./products.entity";
-import { ProductsResp, RecalculateData } from "../interfaces/products";
+import {ProductFilters, ProductOrder, ProductsResp, RecalculateData} from "../interfaces/products";
 import { ResponseStatus } from "../interfaces/response-status";
 import { NewProductDTO } from "./dto/new-product";
 import { DiscountCodesService } from "../discount-codes/discount-codes.service";
-import {BasketsEntity} from "../baskets/baskets.entity";
-import {EditProductsDTO} from "./dto/edit-products";
+import { BasketsEntity } from "../baskets/baskets.entity";
+import { EditProductsDTO } from "./dto/edit-products";
 
 @Injectable()
 export class ProductsService {
@@ -14,27 +14,38 @@ export class ProductsService {
     ) {
     }
 
-    async getAll(): Promise<ProductsResp> {
+    async getAll(page: number = 1, category: string, filter: ProductFilters, order: ProductOrder): Promise<ProductsResp> {
+        const maxPerPage = 3;
+        const orders = {};
+        if(order && filter) orders[filter] = order;
+        else orders['promotion'] = ProductOrder.asc;
+
+        const where = {}
+        if (category) where['category'] = category
+
         const [items, count]: [ProductsEntity[], number] = await ProductsEntity.findAndCount({
-            order: {
-                price: "ASC",
-            },
+            skip: maxPerPage * (page - 1),
+            take: maxPerPage,
+            where: where,
+            order: orders,
         });
 
         if (items.length > 0) {
+            const pagesCount = Math.ceil(count / maxPerPage);
             items.forEach(item => item = this.itemPriceRecalculate(item))
 
             return {
                 success: true,
                 status: ResponseStatus.ok,
                 count: count,
+                pagesCount: pagesCount,
                 items: items,
             }
         } else {
             return {
                 success: false,
-                status: ResponseStatus.ok,
-                errors: ["Empty"],
+                status: ResponseStatus.notFound,
+                errors: [`Not found`],
             }
         }
     }

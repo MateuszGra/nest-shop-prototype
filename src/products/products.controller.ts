@@ -1,7 +1,7 @@
-import {Get, Post, Inject, Body, Param, UseInterceptors, Put, ParseUUIDPipe} from '@nestjs/common';
+import {Get, Post, Inject, Body, Param, UseInterceptors, Put, ParseUUIDPipe, Query} from '@nestjs/common';
 import { Controller } from '@nestjs/common';
 import { ProductsService } from "./products.service";
-import { ProductsResp } from "../interfaces/products";
+import { ProductFilters, ProductOrder, ProductsResp } from "../interfaces/products";
 import { NewProductDTO } from "./dto/new-product";
 import { CacheInterceptor } from "../interceptors/cache.interceptor";
 import { CacheTime } from "../decorators/cache-time.decorator";
@@ -18,8 +18,13 @@ export class ProductsController {
     @Get('/')
     @UseInterceptors(CacheInterceptor)
     @CacheTime(10)
-    async showAll(): Promise<ProductsResp> {
-        return await this.productsService.getAll();
+    async showAll(
+        @Query('c') category: string,
+        @Query('page') page: number,
+        @Query('f') filter: ProductFilters,
+        @Query('o') order: ProductOrder,
+    ): Promise<ProductsResp> {
+        return await this.productsService.getAll(page, category, filter, order);
     }
 
     @Get('/:id')

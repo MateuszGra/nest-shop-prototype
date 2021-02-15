@@ -25,11 +25,24 @@ export interface RecalculateData {
     items: BasketsEntity[],
 }
 
+export enum ProductFilters {
+    promotionPrice = 'promotionPrice',
+    promotion = 'promotion',
+    availability = 'availability',
+    sold = 'sold',
+}
+
+export enum ProductOrder {
+    asc = 'ASC',
+    desc = 'DESC',
+}
+
 export type ProductsResp = {
     success: true,
     status: ResponseStatus,
     items?: ProductsEntity[],
     count?: number,
+    pagesCount?: number,
     id?: string,
 } | {
     success: false,
