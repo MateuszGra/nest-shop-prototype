@@ -6,6 +6,7 @@ import {BasketsEntity} from "../baskets/baskets.entity";
 
 export interface ProductsData {
     name: string,
+    category: string;
     id: string,
     availability: number,
     description: string,

@@ -15,6 +15,11 @@ export class ProductsEntity extends BaseEntity implements ProductsData {
     name: string;
 
     @Column({
+        length: 100,
+    })
+    category: string;
+
+    @Column({
         type: "int",
         precision: 6,
     })

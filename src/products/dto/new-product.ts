@@ -5,6 +5,10 @@ export class NewProductDTO {
     @Length(2, 300)
     name: string;
 
+    @IsString()
+    @Length(2, 100)
+    category: string;
+
     @IsInt()
     @Min(1)
     @Max(999999)
