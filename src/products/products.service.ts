@@ -1,11 +1,13 @@
-import {Inject, Injectable} from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { ProductsEntity } from "./products.entity";
-import {ProductFilters, ProductOrder, ProductsResp, RecalculateData} from "../interfaces/products";
+import { ProductFilters, ProductOrder, ProductsResp, RecalculateData } from "../interfaces/products";
 import { ResponseStatus } from "../interfaces/response-status";
 import { NewProductDTO } from "./dto/new-product";
 import { DiscountCodesService } from "../discount-codes/discount-codes.service";
 import { BasketsEntity } from "../baskets/baskets.entity";
 import { EditProductsDTO } from "./dto/edit-products";
+import { MulterDiskUploadedFiles } from "../interfaces/files";
+import { ProductsImagesEntity } from "./products-images.entity";
 
 @Injectable()
 export class ProductsService {
@@ -68,7 +70,7 @@ export class ProductsService {
         }
     }
 
-    async addOne(newProduct: NewProductDTO): Promise<ProductsResp> {
+    async addOne(newProduct: NewProductDTO, files: MulterDiskUploadedFiles): Promise<ProductsResp> {
         newProduct.price = newProduct.price * 100;
         const product = new ProductsEntity();
         Object.assign(product, newProduct);
@@ -78,6 +80,14 @@ export class ProductsService {
         else product.promotionPrice = product.price;
 
         await product.save();
+
+        if (files.images[0]) {
+            const images = ProductsImagesEntity.create({
+                imageFn: files.images[0].filename,
+                product: product,
+            })
+             await images.save();
+        }
 
         if (product) {
             return {

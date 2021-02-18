@@ -1,11 +1,15 @@
-import {Get, Post, Inject, Body, Param, UseInterceptors, Put, ParseUUIDPipe, Query} from '@nestjs/common';
+import { Get, Post, Inject, Body, Param, UseInterceptors, Put, ParseUUIDPipe, Query, UploadedFiles } from '@nestjs/common';
 import { Controller } from '@nestjs/common';
 import { ProductsService } from "./products.service";
 import { ProductFilters, ProductOrder, ProductsResp } from "../interfaces/products";
 import { NewProductDTO } from "./dto/new-product";
 import { CacheInterceptor } from "../interceptors/cache.interceptor";
 import { CacheTime } from "../decorators/cache-time.decorator";
-import {EditProductsDTO} from "./dto/edit-products";
+import { EditProductsDTO } from "./dto/edit-products";
+import { FileFieldsInterceptor } from "@nestjs/platform-express";
+import * as path from 'path';
+import { storageDir } from "../utils/storage";
+import { MulterDiskUploadedFiles } from "../interfaces/files";
 
 @Controller('products')
 export class ProductsController {
@@ -35,10 +39,20 @@ export class ProductsController {
     }
 
     @Post('/')
+    @UseInterceptors(
+        FileFieldsInterceptor([
+            {
+              name: 'images', maxCount: 1.
+            },
+        ], {
+            dest: path.join(storageDir(), 'product-images'),
+        })
+    )
     async addNew(
         @Body() newProduct: NewProductDTO,
+        @UploadedFiles() files: MulterDiskUploadedFiles,
     ): Promise<ProductsResp> {
-        return await this.productsService.addOne(newProduct);
+        return await this.productsService.addOne(newProduct, files);
     }
 
     @Put('/:id')

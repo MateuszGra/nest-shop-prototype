@@ -12,7 +12,7 @@ export class ProductsImagesEntity extends BaseEntity  {
         default: null,
         nullable: true,
     })
-    photoFn: string;
+    imageFn: string;
 
     @ManyToOne(type => ProductsEntity, entity => entity.images)
     @JoinColumn()

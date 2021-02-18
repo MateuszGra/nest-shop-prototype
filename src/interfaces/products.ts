@@ -2,7 +2,8 @@ import { ProductsEntity } from "../products/products.entity";
 import { ResponseStatus } from "./response-status";
 import { BaseEntity } from "typeorm";
 import { OrdersItemsEntity } from "../orders/orders-items.entity";
-import {BasketsEntity} from "../baskets/baskets.entity";
+import { BasketsEntity } from "../baskets/baskets.entity";
+import { ProductsImagesEntity } from "../products/products-images.entity";
 
 export interface ProductsData {
     name: string,
@@ -14,6 +15,7 @@ export interface ProductsData {
     sold: number,
     promotion: number,
     promotionPrice: number,
+    images: ProductsImagesEntity[],
     basket: BaseEntity[],
     orders: OrdersItemsEntity[],
 }
