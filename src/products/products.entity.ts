@@ -1,7 +1,8 @@
-import { BaseEntity, Column, Entity, Index, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import {BaseEntity, Column, Entity, Index, OneToMany, PrimaryGeneratedColumn} from "typeorm";
 import { ProductsData } from "../interfaces/products";
 import { BasketsEntity } from "../baskets/baskets.entity";
 import { OrdersItemsEntity } from "../orders/orders-items.entity";
+import {ProductsImagesEntity} from "./products-images.entity";
 
 @Entity()
 export class ProductsEntity extends BaseEntity implements ProductsData {
@@ -58,4 +59,7 @@ export class ProductsEntity extends BaseEntity implements ProductsData {
 
     @OneToMany(type => OrdersItemsEntity, entity => entity.product)
     orders: OrdersItemsEntity[];
+
+    @OneToMany(type => ProductsImagesEntity, entity => entity.product)
+    images: ProductsImagesEntity[];
 }
