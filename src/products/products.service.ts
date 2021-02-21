@@ -161,14 +161,8 @@ export class ProductsService {
             const one = await ProductsEntity.findOne(id, {
                 relations: ['images'],
             });
-
-            if (!one) {
-                throw new Error('No object found!');
-            }
-
-            if (!one.images[0].imageFn) {
-                throw new Error('No photo in this product!');
-            }
+            if (!one) throw new Error('No object found!');
+            if (!one.images[0].imageFn) throw new Error('No photo in this product!');
 
             res.sendFile(
                 one.images[0].imageFn,
