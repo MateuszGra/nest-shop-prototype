@@ -8,6 +8,8 @@ import { BasketsEntity } from "../baskets/baskets.entity";
 import { EditProductsDTO } from "./dto/edit-products";
 import { MulterDiskUploadedFiles } from "../interfaces/files";
 import { ProductsImagesEntity } from "./products-images.entity";
+import { storageDir } from "../utils/storage";
+import * as path from 'path';
 
 @Injectable()
 export class ProductsService {
@@ -81,12 +83,14 @@ export class ProductsService {
 
         await product.save();
 
-        if (files.images[0]) {
-            const images = ProductsImagesEntity.create({
-                imageFn: files.images[0].filename,
-                product: product,
+        if (files.images.length > 0) {
+            await files.images.forEach( image => {
+                const images = ProductsImagesEntity.create({
+                    imageFn: files.images[0].filename,
+                    product: product,
+                })
+                images.save();
             })
-             await images.save();
         }
 
         if (product) {
@@ -149,6 +153,36 @@ export class ProductsService {
         return {
             success: true,
             status: ResponseStatus.ok,
+        }
+    }
+
+    async getPhoto(id: string, res: any) {
+        try {
+            const one = await ProductsEntity.findOne(id, {
+                relations: ['images'],
+            });
+
+            if (!one) {
+                throw new Error('No object found!');
+            }
+
+            if (!one.images[0].imageFn) {
+                throw new Error('No photo in this product!');
+            }
+
+            res.sendFile(
+                one.images[0].imageFn,
+                {
+                    root: path.join(storageDir(), 'product-images'),
+                },
+            );
+
+        } catch(e) {
+            res.json({
+                success: false,
+                status: ResponseStatus.notFound,
+                errors: [e.message],
+            });
         }
     }
 }
