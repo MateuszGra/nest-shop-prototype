@@ -14,10 +14,10 @@ import {
 import { Controller } from '@nestjs/common';
 import { ProductsService } from "./products.service";
 import { ProductFilters, ProductOrder, ProductsResp } from "../interfaces/products";
-import { NewProductDTO } from "./dto/new-product";
+import { NewProductDTO } from "./dto/new-product.dto";
 import { CacheInterceptor } from "../interceptors/cache.interceptor";
 import { CacheTime } from "../decorators/cache-time.decorator";
-import { EditProductsDTO } from "./dto/edit-products";
+import { EditProductsDTO } from "./dto/edit-products.dto";
 import { FileFieldsInterceptor } from "@nestjs/platform-express";
 import * as path from 'path';
 import { multerStorage, storageDir } from "../utils/storage";

@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { BasketsEntity } from "./baskets.entity";
-import { AddToBasketDTO } from "./dto/add-to-basket";
+import { AddToBasketDTO } from "./dto/add-to-basket.dto";
 import { ProductsService } from "../products/products.service";
 import { UsersService } from "../users/users.service";
 import { BasketResp } from "../interfaces/basket";

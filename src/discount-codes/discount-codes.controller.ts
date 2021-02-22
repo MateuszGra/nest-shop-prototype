@@ -1,8 +1,8 @@
 import {Body, Controller, Delete, Get, Inject, Param, ParseUUIDPipe, Post, Put} from '@nestjs/common';
 import { DiscountCodesService } from "./discount-codes.service";
-import { NewDiscountCodeDTO } from "./dto/new-discount-code";
+import { NewDiscountCodeDTO } from "./dto/new-discount-code.dto";
 import { DiscountCodesResp } from "../interfaces/discount-codes";
-import {EditDiscountCodeDTO} from "./dto/edit-discount-code";
+import {EditDiscountCodeDTO} from "./dto/edit-discount-code.dto";
 
 @Controller('discount-codes')
 export class DiscountCodesController {

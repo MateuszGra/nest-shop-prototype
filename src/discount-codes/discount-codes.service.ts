@@ -1,10 +1,10 @@
 import {Injectable} from '@nestjs/common';
-import {NewDiscountCodeDTO} from "./dto/new-discount-code";
+import {NewDiscountCodeDTO} from "./dto/new-discount-code.dto";
 import {DiscountCodesResp} from "../interfaces/discount-codes";
 import {DiscountCodesEntity} from "./discount-codes.entity";
 import {ResponseStatus} from "../interfaces/response-status";
 import {Equal} from "typeorm";
-import {EditDiscountCodeDTO} from "./dto/edit-discount-code";
+import {EditDiscountCodeDTO} from "./dto/edit-discount-code.dto";
 
 @Injectable()
 export class DiscountCodesService {

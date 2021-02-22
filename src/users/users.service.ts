@@ -2,13 +2,13 @@ import { Inject, Injectable } from '@nestjs/common';
 import { UsersEntity } from "./users.entity";
 import { UserResp, UsersRole } from "../interfaces/users";
 import { ResponseStatus } from "../interfaces/response-status";
-import { RegisterUserDTO } from "./dto/register-user";
+import { RegisterUserDTO } from "./dto/register-user.dto";
 import { MailService } from "../mail/mail.service";
 import { registerEmailTemplate } from "../templates/email/register";
-import { AddDiscountCodeDTO } from "./dto/add-discount-code";
+import { AddDiscountCodeDTO } from "./dto/add-discount-code.dto";
 import { DiscountCodesService } from "../discount-codes/discount-codes.service";
 import { DiscountCodesResp } from "../interfaces/discount-codes";
-import { EditUserDTO } from "./dto/edit-user";
+import { EditUserDTO } from "./dto/edit-user.dto";
 
 @Injectable()
 export class UsersService {
