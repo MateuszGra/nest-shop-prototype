@@ -26,6 +26,15 @@ export class UsersEntity extends BaseEntity implements UserData {
     email: string;
 
     @Column()
+    pwdHash: string;
+
+    @Column({
+        nullable: true,
+        default: null,
+    })
+    currentTokenId: string | null;
+
+    @Column()
     role: UsersRole;
 
     @Column({

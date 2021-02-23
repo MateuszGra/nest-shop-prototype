@@ -9,6 +9,7 @@ import { AddDiscountCodeDTO } from "./dto/add-discount-code.dto";
 import { DiscountCodesService } from "../discount-codes/discount-codes.service";
 import { DiscountCodesResp } from "../interfaces/discount-codes";
 import { EditUserDTO } from "./dto/edit-user.dto";
+import {hashPwd} from "../utils/hash-pwd";
 
 @Injectable()
 export class UsersService {
@@ -76,6 +77,7 @@ export class UsersService {
         const user = new UsersEntity();
         Object.assign(user, newUser);
         user.role = UsersRole.user;
+        user.pwdHash = hashPwd(newUser.pwd)
         await user.save();
 
         if (user) {

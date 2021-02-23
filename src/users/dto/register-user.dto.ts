@@ -12,4 +12,8 @@ export class RegisterUserDTO {
     @IsEmail()
     @Length(4, 100)
     email: string;
+
+    @IsString()
+    @Length(6, 50)
+    pwd: string
 }

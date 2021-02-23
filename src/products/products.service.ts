@@ -27,6 +27,8 @@ export class ProductsService {
         const where = {}
         if (category) where['category'] = category
 
+        console.log(order, filter, category)
+
         const [items, count]: [ProductsEntity[], number] = await ProductsEntity.findAndCount({
             skip: maxPerPage * (page - 1),
             take: maxPerPage,

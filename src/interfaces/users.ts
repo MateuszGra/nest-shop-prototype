@@ -14,6 +14,8 @@ export interface UserData {
     name: string,
     surname: string,
     email: string,
+    pwdHash: string,
+    currentTokenId: string | null,
     createdAt: Date,
     role: UsersRole,
     productsInBasket: BasketsEntity[],
