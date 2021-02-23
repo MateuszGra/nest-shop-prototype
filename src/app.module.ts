@@ -9,6 +9,7 @@ import { CacheModule } from './cache/cache.module';
 import { OrdersModule } from './orders/orders.module';
 import { MailModule } from './mail/mail.module';
 import { DiscountCodesModule } from './discount-codes/discount-codes.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -19,7 +20,8 @@ import { DiscountCodesModule } from './discount-codes/discount-codes.module';
     CacheModule,
     OrdersModule,
     MailModule,
-    DiscountCodesModule
+    DiscountCodesModule,
+    AuthModule
   ],
   controllers: [AppController],
   providers: [AppService],
