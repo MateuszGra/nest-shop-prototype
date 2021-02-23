@@ -5,9 +5,8 @@ import { ProductsService } from "../products/products.service";
 import { UsersService } from "../users/users.service";
 import { BasketResp } from "../interfaces/basket";
 import { ProductsResp} from "../interfaces/products";
-import { UserResp } from "../interfaces/users";
+import { UserFilteredResp, UserResp } from "../interfaces/users";
 import { ResponseStatus } from "../interfaces/response-status";
-import { UsersEntity } from "../users/users.entity";
 import { ProductsEntity } from "../products/products.entity";
 
 @Injectable()
@@ -99,7 +98,7 @@ export class BasketsService {
         }
     }
 
-    async createBasket(newBasket: AddToBasketDTO, user: UsersEntity, product: ProductsEntity): Promise<BasketResp> {
+    async createBasket(newBasket: AddToBasketDTO, user: UserFilteredResp, product: ProductsEntity): Promise<BasketResp> {
         if (newBasket.count === undefined) newBasket.count = 1;
         const availabilityResp = await this.availability(newBasket.count, product);
         if (!availabilityResp.success) return availabilityResp;

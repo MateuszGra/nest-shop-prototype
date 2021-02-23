@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { UsersEntity } from "./users.entity";
-import { UserResp, UsersRole } from "../interfaces/users";
+import { UserFilteredResp, UserResp, UsersRole} from "../interfaces/users";
 import { ResponseStatus } from "../interfaces/response-status";
 import { RegisterUserDTO } from "./dto/register-user.dto";
 import { MailService } from "../mail/mail.service";
@@ -9,7 +9,7 @@ import { AddDiscountCodeDTO } from "./dto/add-discount-code.dto";
 import { DiscountCodesService } from "../discount-codes/discount-codes.service";
 import { DiscountCodesResp } from "../interfaces/discount-codes";
 import { EditUserDTO } from "./dto/edit-user.dto";
-import {hashPwd} from "../utils/hash-pwd";
+import { hashPwd } from "../utils/hash-pwd";
 
 @Injectable()
 export class UsersService {
@@ -26,7 +26,7 @@ export class UsersService {
                 success: true,
                 status: ResponseStatus.ok,
                 count: count,
-                users: users,
+                users: this.filter(users),
             }
         } else {
             return {
@@ -37,6 +37,14 @@ export class UsersService {
         }
     }
 
+    filter(users: UsersEntity[]): UserFilteredResp[] {
+        users.forEach( user => {
+            delete user.pwdHash;
+            delete user.currentTokenId;
+        })
+        return users;
+    }
+
     async getOne(id: string): Promise<UserResp> {
         const user: UsersEntity = await UsersEntity.findOne(id, {
             relations: ['discountCode'],
@@ -45,7 +53,7 @@ export class UsersService {
             return {
                 success: true,
                 status: ResponseStatus.ok,
-                users: [user],
+                users: this.filter([user]),
             }
         } else {
             return {

@@ -1,7 +1,7 @@
-import { UsersEntity } from "../users/users.entity";
 import { ResponseStatus } from "./response-status";
 import { BasketsEntity } from "../baskets/baskets.entity";
 import { OrdersEntity } from "../orders/orders.entity";
+import { DiscountCodesEntity } from "../discount-codes/discount-codes.entity";
 
 export enum UsersRole {
     user = 'user',
@@ -22,10 +22,22 @@ export interface UserData {
     orders: OrdersEntity[],
 }
 
+export interface UserFilteredResp {
+    id: string,
+    name: string,
+    surname: string,
+    email: string,
+    discountCode: DiscountCodesEntity,
+    createdAt: Date,
+    role: UsersRole,
+    productsInBasket: BasketsEntity[],
+    orders: OrdersEntity[],
+}
+
 export type UserResp = {
     success: true,
     status: ResponseStatus,
-    users?: UsersEntity[],
+    users?: UserFilteredResp[],
     count?: number,
     id?: string,
 } | {
