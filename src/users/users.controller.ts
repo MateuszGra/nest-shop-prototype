@@ -1,11 +1,24 @@
-import { Body, Controller, Get, Inject, Param, ParseUUIDPipe, Post, Put, UseInterceptors } from '@nestjs/common';
+import {
+    Body,
+    Controller,
+    Get,
+    Inject,
+    Param,
+    ParseUUIDPipe,
+    Post,
+    Put,
+    UseGuards,
+    UseInterceptors
+} from '@nestjs/common';
 import { UsersService } from "./users.service";
 import { UserResp } from "../interfaces/users";
 import { RegisterUserDTO } from "./dto/register-user.dto";
 import { CacheInterceptor } from "../interceptors/cache.interceptor";
 import { CacheTime } from "../decorators/cache-time.decorator";
-import { AddDiscountCodeDTO } from "./dto/add-discount-code.dto";
 import { EditUserDTO } from "./dto/edit-user.dto";
+import { AuthGuard } from "@nestjs/passport";
+import { UserObj } from "../decorators/user-obj.decorator";
+import { UsersEntity } from "./users.entity";
 
 @Controller('users')
 export class UsersController {
@@ -22,19 +35,21 @@ export class UsersController {
         return await this.usersService.getAll();
     }
 
-    @Get('/:id')
+    @Get('/show-user')
+    @UseGuards(AuthGuard('jwt'))
     async showOne(
-        @Param('id', ParseUUIDPipe) id: string,
+        @UserObj() user: UsersEntity,
     ): Promise<UserResp> {
-        return await this.usersService.getOne(id);
+        return await this.usersService.getOne(user);
     }
 
-    @Put('/:id')
+    @Put('/edit-user')
+    @UseGuards(AuthGuard('jwt'))
     async editOne(
         @Body() editUser: EditUserDTO,
-        @Param('id', ParseUUIDPipe) id: string,
+        @UserObj() user: UsersEntity,
     ): Promise<UserResp> {
-        return  await  this.usersService.editOne(editUser, id)
+        return  await  this.usersService.editOne(editUser, user)
     }
 
     @Post('/register-user')
@@ -49,10 +64,12 @@ export class UsersController {
         return await this.usersService.registerGuest();
     }
 
-    @Post('/add-discount-code/')
+    @Post('/add-discount-code/:code')
+    @UseGuards(AuthGuard('jwt'))
     async addDiscountCode(
-        @Body() discountCode: AddDiscountCodeDTO,
+        @UserObj() user: UsersEntity,
+        @Param('code') discountCode: string,
     ): Promise<UserResp> {
-        return await this.usersService.addDiscountCode(discountCode)
+        return await this.usersService.addDiscountCode(user, discountCode)
     }
 }

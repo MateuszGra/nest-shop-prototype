@@ -53,9 +53,7 @@ export class ProductsController {
     @Post('/')
     @UseInterceptors(
         FileFieldsInterceptor([
-            {
-              name: 'images', maxCount: 10.
-            },
+            { name: 'images', maxCount: 10 },
             ], {storage: multerStorage(path.join(storageDir(), 'product-images'))},
         ),
     )

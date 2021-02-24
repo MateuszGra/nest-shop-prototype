@@ -5,7 +5,6 @@ import { ResponseStatus } from "../interfaces/response-status";
 import { RegisterUserDTO } from "./dto/register-user.dto";
 import { MailService } from "../mail/mail.service";
 import { registerEmailTemplate } from "../templates/email/register";
-import { AddDiscountCodeDTO } from "./dto/add-discount-code.dto";
 import { DiscountCodesService } from "../discount-codes/discount-codes.service";
 import { DiscountCodesResp } from "../interfaces/discount-codes";
 import { EditUserDTO } from "./dto/edit-user.dto";
@@ -17,6 +16,14 @@ export class UsersService {
         @Inject(MailService) private mailService: MailService,
         @Inject(DiscountCodesService) private discountCodesService: DiscountCodesService,
     ) {
+    }
+
+    filter(users: UsersEntity[]): UserFilteredResp[] {
+        users.forEach( user => {
+            delete user.pwdHash;
+            delete user.currentTokenId;
+        })
+        return users;
     }
 
     async getAll(): Promise<UserResp> {
@@ -37,30 +44,11 @@ export class UsersService {
         }
     }
 
-    filter(users: UsersEntity[]): UserFilteredResp[] {
-        users.forEach( user => {
-            delete user.pwdHash;
-            delete user.currentTokenId;
-        })
-        return users;
-    }
-
-    async getOne(id: string): Promise<UserResp> {
-        const user: UsersEntity = await UsersEntity.findOne(id, {
-            relations: ['discountCode'],
-        });
-        if (user) {
-            return {
-                success: true,
-                status: ResponseStatus.ok,
-                users: this.filter([user]),
-            }
-        } else {
-            return {
-                success: false,
-                status: ResponseStatus.notFound,
-                errors: [`User (${id}) not found`],
-            }
+    async getOne(user: UsersEntity): Promise<UserResp> {
+        return {
+            success: true,
+            status: ResponseStatus.ok,
+            users: this.filter([user]),
         }
     }
 
@@ -113,11 +101,8 @@ export class UsersService {
 
     }
 
-    async addDiscountCode(discountCode: AddDiscountCodeDTO): Promise<UserResp> {
-        const userResp = await this.getOne(discountCode.userId);
-        if (!userResp.success) return userResp;
-
-        const codeResp: DiscountCodesResp = await this.discountCodesService.getOne(discountCode.code);
+    async addDiscountCode(user: UsersEntity, discountCode: string): Promise<UserResp> {
+        const codeResp: DiscountCodesResp = await this.discountCodesService.getOne(discountCode);
         if (!codeResp.success) return codeResp;
 
         if (!codeResp.upToDate) {
@@ -128,30 +113,23 @@ export class UsersService {
             }
         }
 
-        if (userResp.users[0].discountCode) {
-            const comparisonCode: DiscountCodesResp = this.discountCodesService.comparison(codeResp.codes[0], userResp.users[0].discountCode);
+        if (user.discountCode) {
+            const comparisonCode: DiscountCodesResp = this.discountCodesService.comparison(codeResp.codes[0], user.discountCode);
             if (!comparisonCode.success) return comparisonCode
         }
 
-        await UsersEntity.update(userResp.users[0].id, {
+        await UsersEntity.update(user.id, {
             discountCode: codeResp.codes[0],
         })
+
         return {
             success: true,
             status: ResponseStatus.ok
         }
     }
 
-    async editOne(editUser: EditUserDTO, id: string): Promise<UserResp> {
-        const UpdateResult = await UsersEntity.update(id, editUser);
-        if (UpdateResult.affected === 0) {
-            return {
-                success: false,
-                status: ResponseStatus.notFound,
-                errors: [`User (${id}) not found`],
-            }
-        }
-
+    async editOne(editUser: EditUserDTO, user): Promise<UserResp> {
+        await UsersEntity.update(user.id, editUser);
         return {
             success: true,
             status: ResponseStatus.ok,
