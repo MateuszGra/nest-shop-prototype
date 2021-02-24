@@ -19,24 +19,26 @@ export class ProductsService {
     }
 
     async getAll(page: number = 1, category: string, filter: ProductFilters, order: ProductOrder): Promise<ProductsResp> {
-        const maxPerPage = 3;
-        const orders = {};
-        if(order && filter) orders[filter] = order.toUpperCase();
-        else orders['promotion'] = ProductOrder.asc;
+        try {
+            const maxPerPage = 3;
+            const orders = {};
+            if (order && filter) orders[filter] = order.toUpperCase();
+            else orders['promotion'] = ProductOrder.asc;
 
-        const where = {}
-        if (category) where['category'] = category
+            const where = {}
+            if (category) where['category'] = category
 
-        console.log(order, filter, category)
+            console.log(order, filter, category)
 
-        const [items, count]: [ProductsEntity[], number] = await ProductsEntity.findAndCount({
-            skip: maxPerPage * (page - 1),
-            take: maxPerPage,
-            where: where,
-            order: orders,
-        });
+            const [items, count]: [ProductsEntity[], number] = await ProductsEntity.findAndCount({
+                skip: maxPerPage * (page - 1),
+                take: maxPerPage,
+                where: where,
+                order: orders,
+            });
 
-        if (items.length > 0) {
+            if (items.length === 0) throw new Error('Not found');
+
             const pagesCount = Math.ceil(count / maxPerPage);
             items.forEach(item => item = this.itemPriceRecalculate(item))
 
@@ -47,29 +49,30 @@ export class ProductsService {
                 pagesCount: pagesCount,
                 items: items,
             }
-        } else {
+        } catch(e) {
             return {
                 success: false,
                 status: ResponseStatus.notFound,
-                errors: [`Not found`],
+                errors: [e.message],
             }
         }
     }
 
     async getOne(id: string): Promise<ProductsResp> {
-        const product: ProductsEntity = await ProductsEntity.findOne(id);
-        if (product) {
+        try {
+            const product: ProductsEntity = await ProductsEntity.findOne(id);
+            if (!product) throw new Error(`Product (${id}) not found`);
             const productRecalculate = this.itemPriceRecalculate(product);
             return {
                 success: true,
                 status: ResponseStatus.ok,
                 items: [productRecalculate],
             }
-        } else {
+        } catch(e) {
             return {
                 success: false,
                 status: ResponseStatus.notFound,
-                errors: [`Product (${id}) not found`],
+                errors: [e.message],
             }
         }
     }
@@ -143,18 +146,20 @@ export class ProductsService {
     }
 
     async editOne(editProduct: EditProductsDTO, id: string): Promise<ProductsResp> {
-        const UpdateResult = await ProductsEntity.update(id, editProduct);
-        if (UpdateResult.affected === 0) {
+        try {
+            const UpdateResult = await ProductsEntity.update(id, editProduct);
+            if (UpdateResult.affected === 0) throw new Error(`Product (${id}) not found`);
+
+            return {
+                success: true,
+                status: ResponseStatus.ok,
+            }
+        } catch(e) {
             return {
                 success: false,
                 status: ResponseStatus.notFound,
-                errors: [`Product (${id}) not found`],
+                errors: [e.message],
             }
-        }
-
-        return {
-            success: true,
-            status: ResponseStatus.ok,
         }
     }
 
