@@ -6,6 +6,7 @@ import { hashPwd } from "../utils/hash-pwd";
 import { v4 as uuid } from 'uuid';
 import { sign } from 'jsonwebtoken';
 import { JwtPayload } from "./jwt.strategy";
+import { ResponseStatus } from "../interfaces/response-status";
 
 @Injectable()
 export class AuthService {
@@ -73,9 +74,16 @@ export class AuthService {
                     httpOnly: true,
                 }
             );
-            return res.json({ok: true});
+            return res.json({
+                success: true,
+                status: ResponseStatus.ok,
+            });
         } catch (e) {
-            return res.json({error: e.message});
+            return res.json({
+                success: false,
+                status: ResponseStatus.notAcceptable,
+                errors: [e.message]
+            });
         }
     }
 }
