@@ -11,6 +11,7 @@ import { orderEmailTemplate } from "../templates/email/order";
 import { OrdersItemsEntity } from "./orders-items.entity";
 import { ProductsService } from "../products/products.service";
 import { DiscountCodesService } from "../discount-codes/discount-codes.service";
+import {UsersEntity} from "../users/users.entity";
 
 @Injectable()
 export class OrdersService {
@@ -49,11 +50,8 @@ export class OrdersService {
         }
     }
 
-    async addOne(userId: string): Promise<OrderResp> {
-        const userResp: UserResp = await this.userService.getOne(userId);
-        if (!userResp.success) return userResp;
-
-        const basketResp: BasketResp = await this.basketService.getUserBasket(userId);
+    async addOne(user: UsersEntity): Promise<OrderResp> {
+        const basketResp: BasketResp = await this.basketService.getUserBasket(user);
         if (!basketResp.success) return basketResp;
         if (basketResp.basket.length === 0 ) {
             return {
@@ -64,7 +62,7 @@ export class OrdersService {
         }
 
         const order: OrdersEntity = OrdersEntity.create({
-            user: userResp.users[0],
+            user: UsersEntity,
             totalPrice: basketResp.totalPrice,
             promotionPrice: basketResp.promotionPrice,
             discount: basketResp.discount,
@@ -88,15 +86,15 @@ export class OrdersService {
         }
 
         await this.mailService.sendMail(
-            userResp.users[0].email,
+            user.email,
             'Potwierdzenie zamówienia',
             orderEmailTemplate(await this.getOneByOrderNumber(order.id))
         )
 
-        if (userResp.users[0].discountCode !== null && userResp.users[0].discountCode.oneTime) {
-            await this.discountCodesService.switchAvailableToFalse(userResp.users[0].discountCode);
+        if (user.discountCode !== null && user.discountCode.oneTime) {
+            await this.discountCodesService.switchAvailableToFalse(user.discountCode);
         }
-        await this.basketService.clearUserBasket(userId);
+        await this.basketService.clearUserBasket(user);
 
         return {
             success: true,

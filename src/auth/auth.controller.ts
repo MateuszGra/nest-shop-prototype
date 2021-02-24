@@ -10,13 +10,13 @@ import { UserObj } from "../decorators/user-obj.decorator";
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-    @Post('/login')
-    async phoneRegister(
-        @Body() req: AuthLoginDto,
-        @Res() res: Response,
-    ): Promise<any> {
-      return this.authService.login(req, res);
-    }
+  @Post('/login')
+  async phoneRegister(
+      @Body() req: AuthLoginDto,
+      @Res() res: Response,
+  ): Promise<any> {
+    return this.authService.login(req, res);
+  }
 
   @Get('logout')
   @UseGuards(AuthGuard('jwt'))

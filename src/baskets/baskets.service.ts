@@ -5,9 +5,10 @@ import { ProductsService } from "../products/products.service";
 import { UsersService } from "../users/users.service";
 import { BasketResp } from "../interfaces/basket";
 import { ProductsResp} from "../interfaces/products";
-import { UserFilteredResp, UserResp } from "../interfaces/users";
+import { UserResp } from "../interfaces/users";
 import { ResponseStatus } from "../interfaces/response-status";
 import { ProductsEntity } from "../products/products.entity";
+import {UsersEntity} from "../users/users.entity";
 
 @Injectable()
 export class BasketsService {
@@ -18,16 +19,13 @@ export class BasketsService {
     }
 
 
-    async getUserBasket(userId: string): Promise<BasketResp> {
-        const userResp: UserResp = await this.userService.getOne(userId);
-        if(!userResp.success) return userResp;
-
+    async getUserBasket(user: UsersEntity): Promise<BasketResp> {
         const [basket, count]: [BasketsEntity[], number] = await BasketsEntity.findAndCount({
             relations: ['product'],
-            where: { user: userId }
+            where: { user: user }
         });
 
-        const userDiscountCode = userResp.users[0].discountCode ? userResp.users[0].discountCode.code : null;
+        const userDiscountCode = user.discountCode ? user.discountCode.code : null;
         const basketRecalculate = await this.productsService.priceRecalculate(basket, userDiscountCode);
 
         return {
@@ -41,41 +39,27 @@ export class BasketsService {
         }
     }
 
-    async clearUserBasket(userId: string): Promise<BasketResp> {
-        const userResp: UserResp = await this.userService.getOne(userId);
-        if(!userResp.success) {
-            return {
-                success: false,
-                status: ResponseStatus.notFound,
-                errors: [`User (${userId}) not found`],
-            }
-        }
-        await BasketsEntity.delete({
-            user: userResp.users[0],
-        });
+    async clearUserBasket(user: UsersEntity): Promise<BasketResp> {
+        await BasketsEntity.delete({ user });
         return {
             success: true,
             status: ResponseStatus.ok,
         }
     }
 
-    async addToBasket(newBasket: AddToBasketDTO, userId: string): Promise<BasketResp> {
+    async addToBasket(newBasket: AddToBasketDTO, user: UsersEntity): Promise<BasketResp> {
         const productResp: ProductsResp = await this.productsService.getOne(newBasket.productId);
         if (!productResp.success) return productResp;
-
-        const userResp: UserResp = await this.userService.getOne(userId);
-        if (!userResp.success) return userResp;
-
 
         const basketExists: BasketsEntity = await BasketsEntity.findOne({
             relations: ['product', 'user'],
             where:{
-                user: userResp.users[0],
+                user: user,
                 product: productResp.items[0],
             }
         })
         if (basketExists) return await this.updateBasket(newBasket, basketExists);
-        else return await this.createBasket(newBasket, userResp.users[0], productResp.items[0])
+        else return await this.createBasket(newBasket, user, productResp.items[0])
     }
 
     async updateBasket(newBasket: AddToBasketDTO, basketExists: BasketsEntity): Promise<BasketResp> {
@@ -98,7 +82,7 @@ export class BasketsService {
         }
     }
 
-    async createBasket(newBasket: AddToBasketDTO, user: UserFilteredResp, product: ProductsEntity): Promise<BasketResp> {
+    async createBasket(newBasket: AddToBasketDTO, user: UsersEntity, product: ProductsEntity): Promise<BasketResp> {
         if (newBasket.count === undefined) newBasket.count = 1;
         const availabilityResp = await this.availability(newBasket.count, product);
         if (!availabilityResp.success) return availabilityResp;

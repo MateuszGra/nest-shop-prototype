@@ -1,6 +1,9 @@
-import { Controller, Get, Inject, Param, ParseUUIDPipe, Post } from '@nestjs/common';
+import {Controller, Get, Inject, Param, ParseUUIDPipe, Post, UseGuards} from '@nestjs/common';
 import { OrdersService } from "./orders.service";
 import { OrderResp } from "../interfaces/orders";
+import {AuthGuard} from "@nestjs/passport";
+import {UserObj} from "../decorators/user-obj.decorator";
+import {UsersEntity} from "../users/users.entity";
 
 @Controller('orders')
 export class OrdersController {
@@ -16,10 +19,11 @@ export class OrdersController {
         return await this.ordersService.getOneByOrderNumber(id);
     }
 
-    @Post('/:userId')
+    @Post('/')
+    @UseGuards(AuthGuard('jwt'))
     async addNew(
-        @Param('userId', ParseUUIDPipe) userId: string
+        @UserObj() user: UsersEntity,
     ): Promise<OrderResp> {
-        return await this.ordersService.addOne(userId);
+        return await this.ordersService.addOne(user);
     }
 }

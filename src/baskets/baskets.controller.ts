@@ -15,11 +15,12 @@ export class BasketsController {
     ) {
     }
 
-    @Get('/:userId')
+    @Get('/')
+    @UseGuards(AuthGuard('jwt'))
     async getOne(
-        @Param('userId', ParseUUIDPipe) userId: string,
+        @UserObj() user: UsersEntity,
     ): Promise<BasketResp> {
-        return await this.basketService.getUserBasket(userId);
+        return await this.basketService.getUserBasket(user);
     }
 
     @Post('/')
@@ -28,13 +29,14 @@ export class BasketsController {
         @UserObj() user: UsersEntity,
         @Body() newBasket: AddToBasketDTO,
     ): Promise<BasketResp> {
-        return await this.basketService.addToBasket(newBasket, user.id);
+        return await this.basketService.addToBasket(newBasket, user);
     }
 
-    @Delete('/:userId')
+    @Delete('/')
+    @UseGuards(AuthGuard('jwt'))
     async clear(
-        @Param('userId', ParseUUIDPipe) userId: string,
+        @UserObj() user: UsersEntity,
     ): Promise<BasketResp> {
-        return await this.basketService.clearUserBasket(userId);
+        return await this.basketService.clearUserBasket(user);
     }
 }
