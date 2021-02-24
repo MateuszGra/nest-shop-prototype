@@ -61,7 +61,7 @@ export class OrdersService {
         }
 
         const order: OrdersEntity = OrdersEntity.create({
-            user: UsersEntity,
+            user: user,
             totalPrice: basketResp.totalPrice,
             promotionPrice: basketResp.promotionPrice,
             discount: basketResp.discount,
@@ -90,6 +90,7 @@ export class OrdersService {
             orderEmailTemplate(await this.getOneByOrderNumber(order.id))
         )
 
+        console.log(user)
         if (user.discountCode !== null && user.discountCode.oneTime) {
             await this.discountCodesService.switchAvailableToFalse(user.discountCode);
         }

@@ -25,7 +25,10 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
             return done(new UnauthorizedException(), false);
         }
 
-        const user = await UsersEntity.findOne({ currentTokenId: payload.id });
+        const user = await UsersEntity.findOne({
+            relations: ['discountCode'],
+            where: { currentTokenId: payload.id }
+        });
         if (!user) {
             return done(new UnauthorizedException(), false);
         }
