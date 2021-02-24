@@ -5,10 +5,9 @@ import { ProductsService } from "../products/products.service";
 import { UsersService } from "../users/users.service";
 import { BasketResp } from "../interfaces/basket";
 import { ProductsResp} from "../interfaces/products";
-import { UserResp } from "../interfaces/users";
 import { ResponseStatus } from "../interfaces/response-status";
 import { ProductsEntity } from "../products/products.entity";
-import {UsersEntity} from "../users/users.entity";
+import { UsersEntity } from "../users/users.entity";
 
 @Injectable()
 export class BasketsService {

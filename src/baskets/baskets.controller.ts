@@ -1,10 +1,10 @@
-import {Body, Controller, Inject, Param, Post, Get, Delete, ParseUUIDPipe, UseGuards} from '@nestjs/common';
+import { Body, Controller, Inject, Post, Get, Delete, UseGuards } from '@nestjs/common';
 import { AddToBasketDTO } from "./dto/add-to-basket.dto";
 import { BasketsService } from "./baskets.service";
 import { BasketResp } from "../interfaces/basket";
-import {AuthGuard} from "@nestjs/passport";
-import {UsersEntity} from "../users/users.entity";
-import {UserObj} from "../decorators/user-obj.decorator";
+import { AuthGuard } from "@nestjs/passport";
+import { UsersEntity } from "../users/users.entity";
+import { UserObj } from "../decorators/user-obj.decorator";
 
 
 @Controller('baskets')

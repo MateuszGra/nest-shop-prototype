@@ -2,7 +2,6 @@ import { Inject, Injectable } from '@nestjs/common';
 import { OrderResp } from "../interfaces/orders";
 import { ResponseStatus } from "../interfaces/response-status";
 import { OrdersEntity } from "./orders.entity";
-import { UserResp } from "../interfaces/users";
 import { UsersService } from "../users/users.service";
 import { BasketsService } from "../baskets/baskets.service";
 import { BasketResp } from "../interfaces/basket";
@@ -11,7 +10,7 @@ import { orderEmailTemplate } from "../templates/email/order";
 import { OrdersItemsEntity } from "./orders-items.entity";
 import { ProductsService } from "../products/products.service";
 import { DiscountCodesService } from "../discount-codes/discount-codes.service";
-import {UsersEntity} from "../users/users.entity";
+import { UsersEntity } from "../users/users.entity";
 
 @Injectable()
 export class OrdersService {

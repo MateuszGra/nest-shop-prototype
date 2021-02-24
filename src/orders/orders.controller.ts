@@ -1,9 +1,9 @@
-import {Controller, Get, Inject, Param, ParseUUIDPipe, Post, UseGuards} from '@nestjs/common';
+import { Controller, Get, Inject, Param, ParseUUIDPipe, Post, UseGuards } from '@nestjs/common';
 import { OrdersService } from "./orders.service";
 import { OrderResp } from "../interfaces/orders";
-import {AuthGuard} from "@nestjs/passport";
-import {UserObj} from "../decorators/user-obj.decorator";
-import {UsersEntity} from "../users/users.entity";
+import { AuthGuard } from "@nestjs/passport";
+import { UserObj } from "../decorators/user-obj.decorator";
+import { UsersEntity } from "../users/users.entity";
 
 @Controller('orders')
 export class OrdersController {
