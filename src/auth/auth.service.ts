@@ -10,6 +10,12 @@ import { ResponseStatus } from "../interfaces/response-status";
 
 @Injectable()
 export class AuthService {
+    private accessTokenOptions: {
+        secure: false,
+        domain: 'localhost',
+        httpOnly: true,
+    };
+
     private createToken(currentTokenId: string): { accessToken: string, expiresIn: number } {
         const payload: JwtPayload = {id: currentTokenId};
         const expiresIn = 60 * 60 * 24;
@@ -51,14 +57,17 @@ export class AuthService {
             const token = await this.createToken(await this.generateToken(user));
 
             return res
-                .cookie('jwt', token.accessToken, {
-                    secure: false,
-                    domain: 'localhost',
-                    httpOnly: true,
-                })
-                .json({ok: true});
+                .cookie('jwt', token.accessToken, this.accessTokenOptions)
+                .json({
+                    success: true,
+                    status: ResponseStatus.ok,
+                });
         } catch (e) {
-            return res.json({error: e.message});
+            return res.json({
+                success: false,
+                status: ResponseStatus.notAcceptable,
+                errors: [e.message]
+            });
         }
     };
 
@@ -66,14 +75,7 @@ export class AuthService {
         try {
             user.currentTokenId = null;
             await user.save();
-            res.clearCookie(
-                'jwt',
-                {
-                    secure: false,
-                    domain: 'localhost',
-                    httpOnly: true,
-                }
-            );
+            res.clearCookie('jwt', this.accessTokenOptions);
             return res.json({
                 success: true,
                 status: ResponseStatus.ok,
